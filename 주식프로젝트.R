@@ -29,7 +29,7 @@ library(NIADic)
 
 # 웹 주소 구조 파악 후 문자열 결합하여 R에서 사용할 수 있는 형태로 웹 주소 만들기
 # 변수 입력하기, 삼성전자 기준
-QUERY <- '현대차' # query 변수! 주식 종목명이 들어갈 자리.
+QUERY <- '삼성전자' # query 변수! 주식 종목명이 들어갈 자리.
 date.end.po <- Sys.time() #현재시간을 POSIXt 형으로 반환하여 date.end.po로 저장.
 date.end.ch <- format(date.end.po, "%Y.%m.%d.%H.%M") #POSIXt -> character 형 변환 일어남.
 date.end.ch # 현재시간을 charcter 형으로 저장. de 변수!
@@ -110,4 +110,4 @@ noundta <- sort(wordFreq, decreasing = T)
 keywords <- rownames(noundta[1:5]) # 상위 5개 단어
 
 
-sprintf("지금으로부터 1시간 전 현대차 관련 뉴스 개수는 %d개 입니다.대표 키워드는 %s,%s,%s,%s,%s 입니다.",the_number_of_news,keywords[1],keywords[2],keywords[3],keywords[4],keywords[5])
+sprintf("지금으로부터 1시간 전 삼성전자 관련 뉴스 개수는 %d개 입니다.대표 키워드는 %s,%s,%s,%s,%s 입니다.",the_number_of_news,keywords[1],keywords[2],keywords[3],keywords[4],keywords[5])
