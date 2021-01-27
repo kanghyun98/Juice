@@ -96,18 +96,21 @@ news_titles_pre
 write.csv(news_titles_pre, "news_titles_pre.csv", quote = F) #사전저장
 titles_text <- read.csv('news_titles_pre.csv',header=T,stringsAsFactors = F)[,2]
 
+useNIADic()
 
-dics <- c('sejong','woorimalsam','NIA')
-buildDictionary(ext_dic = dics, user_dic = data.frame('코스피','삼성전자','당근마켓','이재용'))
+#===============#
+#dics <- c('sejong','woorimalsam','NIADic')
+#buildDictionary(ext_dic = 'NIADic', user_dic = data.frame('코스피','삼성전자','당근마켓','이재용'))
 
+
+#buildDictionary(ext_dic = dics, user_dic = data.frame(readLines("한글종목약명.txt", encoding="UTF-8")))
+#주식종목명 추가 필요시 
+#==============#
 noun <- sapply(titles_text, extractNoun, USE.NAMES = F) %>% unlist()
-head(noun)
-
-
 noun2 <- Filter(function(x){nchar(x) >=2}, noun)
 wordFreq <- table(noun2)
 noundta <- sort(wordFreq, decreasing = T)
 keywords <- rownames(noundta[1:5]) # 상위 5개 단어
 
 
-sprintf("지금으로부터 1시간 전 삼성전자 관련 뉴스 개수는 %d개 입니다.대표 키워드는 %s,%s,%s,%s,%s 입니다.",the_number_of_news,keywords[1],keywords[2],keywords[3],keywords[4],keywords[5])
+sprintf("지금으로부터 1시간 전 YG 관련 뉴스 개수는 %d개 입니다.대표 키워드는 %s,%s,%s,%s,%s 입니다.",the_number_of_news,keywords[1],keywords[2],keywords[3],keywords[4],keywords[5])
