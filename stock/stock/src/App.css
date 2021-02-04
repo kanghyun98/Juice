@@ -1,0 +1,44 @@
+@import url('https://fonts.googleapis.com/css2?family=Oswald&display=swap');
+@font-face { 
+  font-family: 'BlackHanSans-Regular'; 
+  src: url(./BlackHanSans-Regular.ttf);
+}
+.App {
+  text-align: center;
+  font-family: 'BlackHanSans-Regular';
+}
+.Navbar1{
+  color : white;
+
+}
+.main_background{
+  background-image: url(./main.jpg);  
+  background-size : 100%;
+  height:400px;
+  color : white;
+}
+.back{
+  width: auto;
+  height: 500px;
+  margin:0px auto;
+}
+.title1{
+  padding-top : 30px;
+  text-align: center;
+  padding-bottom: 30px;
+  font-size : 40px;
+}
+.card3{
+  width: 400px;
+  height: 200px;
+  margin: 0 auto;
+  align-items: center;
+}
+.google{
+  widows: 100%;
+  height:100%
+}
+.Main_Carousel{
+  background-size: 100%;
+  margin:auto;
+}
