@@ -1,4 +1,5 @@
 {
+  "homepage": "http://jhy979.com/blog",
   "dependencies": {
     "bootstrap": "^4.6.0",
     "react-bootstrap": "^1.4.3"

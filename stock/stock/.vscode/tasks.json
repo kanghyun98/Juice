@@ -1,0 +1,17 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "npm",
+			"script": "deploy",
+			"path": "functions/",
+			"problemMatcher": [],
+			"label": "npm: deploy - functions",
+			"detail": "firebase deploy --only functions",
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			}
+		}
+	]
+}

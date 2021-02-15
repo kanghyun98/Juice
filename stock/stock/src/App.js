@@ -1,17 +1,36 @@
 /*eslint-disable*/
 import './App.css';
+import React, {useState,lazy,Suspense,PureComponent} from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import Stock_page from './stock_page.js';
-import {Navbar,Nav,NavDropdown,Button,Form,FormControl,Jumbotron,Container,Row,Col,Carousel,Card} from 'react-bootstrap';
+//components
+//components
+let Stock_page = lazy(()=>{return import('./components/stock_page.js')});
+//bootstrap
+//bootstrap
+import {Navbar,Nav,NavDropdown,Button,Form,FormControl,Jumbotron,Container,Row,Col,Carousel,Card,Image} from 'react-bootstrap';
+//router
+//router
 import {Link,Switch,Route} from 'react-router-dom';
-import News_Up from './News_Up.png';
-import Real_time from './Realtime.png';
-import Alarm from './Alarm.png';
-import Cart from './Cart.js';
+//chart
+//chart
+import {
+  LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend,ComposedChart,Area,Bar
+} from 'recharts';
+//image
+//image
+import News_Up from './image//News_Up.png';
+import Real_time from './image//Realtime.png';
+import Alarm from './image/Alarm.png';
+//data
+//data
+import Saying from './data/saying.js';
+import Samsung from './data/samsung.js';
+
 //MainMainMain
 //MainMainMain
 //MainMainMain
 function App() {
+
   return (
     <div className="App">
       <Switch>
@@ -25,12 +44,16 @@ function App() {
         </Route>
         <Route path="/stock">
           <Navnav></Navnav>
-          <Stock_page></Stock_page>
+          <Suspense fallback = {<div>로딩중...</div>}>
+            <Stock_page></Stock_page>
+          </Suspense>
         </Route>
 
         <Route path="/stock/:id">
           <Navnav></Navnav>
-          <Stock_page></Stock_page>
+          <Suspense fallback = {<div>로딩중...</div>}>
+            <Stock_page></Stock_page>
+          </Suspense>
         </Route>
       </Switch>
     </div>
@@ -38,10 +61,11 @@ function App() {
 }
 
 //Navbar 상단바 컴포넌트
-//Navbar 상단바 컴포넌트
+//Navbar 상단바 컴포넌트 
 //Navbar 상단바 컴포넌트
 function Navnav(){
   return(
+    <div>
     <Navbar className = "Navbar1" expand="lg">
         <Navbar.Brand><Link to="">Stock Alarm</Link></Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
@@ -53,16 +77,36 @@ function Navnav(){
               <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
               <NavDropdown.Item href="#action/3.2">Another action</NavDropdown.Item>
               <NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>
-              <NavDropdown.Divider />
+              <NavDropdown.Divider />.
               <NavDropdown.Item href="#action/3.4">Separated link</NavDropdown.Item>
             </NavDropdown>
           </Nav>
           <Form inline>
-            <FormControl type="text" placeholder="Search" className="mr-sm-2" />
+            <FormControl type="text" placeholder="예) 삼성전자" className="mr-sm-2" />
             <Button variant="outline-success">Search</Button>
           </Form>
         </Navbar.Collapse>
       </Navbar>
+      
+      <Carousel className="sayingback">
+          {
+            Saying.map(function(a,i){
+              return (
+                <Carousel.Item>
+                  {/* <Image src={Saying[i].image} className="saying" /> */}
+                  <Carousel.Caption>
+                    </Carousel.Caption>
+                    <p style={{color:"white" ,"padding-top":"10px"}}>  - {Saying[i].name} - <br></br> {Saying[i].saying}  </p>
+                     
+                  
+                </Carousel.Item>
+              )
+            })
+          }
+      </Carousel>
+
+      
+      </div>
   );
 }
 
@@ -154,7 +198,7 @@ function Main_page(){
           <img
             className="back"
             src={Alarm}
-            alt="Third slide"
+            alt="Third slide" 
             
           />
           
@@ -164,6 +208,11 @@ function Main_page(){
         </Carousel.Item>
       </Carousel>
       <hr/>
+
+
+      {/* <iframe src="https://public.tableau.com/profile/.67648575#!/vizhome/shared/QS3GGZ24X:showVizHome=no&amp;:embed=true" width="1024" height="700"></iframe> */}
+
+      
       </div>
   );
 }
