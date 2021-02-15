@@ -36,7 +36,7 @@ app.get('/',function(req,res){
 });
 
 app.get('/stock/kakao',(req,res)=>{
-    connection.query("SELECT *FROM 포스코엠텍",
+    connection.query("SELECT *FROM 포스코엠텍 LIMIT 30",
     function (err,rows,fields){
        if(err){
            console.log("실패실패실패실패실패실패실패실패실패실패실패실패");
