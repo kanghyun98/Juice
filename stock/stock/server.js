@@ -16,7 +16,7 @@ const connection = mysql.createConnection({
     port : conf.port
 });
 connection.connect();
- 
+ const qs = require('qs');
 const http = require('http').createServer(app);
 http.listen(8080,function(){
     console.log('8080하고있습니당');
@@ -28,18 +28,30 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use('/',express.static(path.join(__dirname,'/build')));
-app.use('/stock',express.static(path.join(__dirname,'/build')));
+// app.use('/stock',express.static(path.join(__dirname,'/build')));
 // app.use('*',express.static(path.join(__dirname,'/build')));
 
 app.get('/',function(req,res){
     req.sendFile(path.join(__dirname,'/build/index.html'));
 });
 
-app.get('/stock/kakao',(req,res)=>{
-    connection.query("SELECT *FROM 포스코엠텍 LIMIT 30",
+app.post('/register',(req,res)=>{
+      //클라이언트에서 받아서 DB에 넣어주자
+
+})
+
+app.post('/stock',(req,res)=>{
+    var body = qs.stringify(req.body);
+    body = decodeURI(body.slice(0,-1)); 
+    var temp1 =`SELECT * FROM `;
+    var temp2 =` limit 20`;
+    var sql = temp1.concat(body,temp2); 
+    console.log(sql); 
+    connection.query(sql,
     function (err,rows,fields){
        if(err){
            console.log("실패실패실패실패실패실패실패실패실패실패실패실패");
+
            return res.send( err);
        }
        else{  

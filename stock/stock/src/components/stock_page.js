@@ -7,37 +7,48 @@ import {
   } from 'recharts';
 import {Form,FormControl,Button} from 'react-bootstrap';
 //
-function Stock_page(){
-  let [chartdata,chartdataset ]=useState([]);
+function Stock_page(props){
+  let [chartdata,chartdataset]=useState([]);
+  let [draw,drawset] = useState(false);
    useEffect(()=>{
-    axios.get('/stock/kakao')
+    axios.post('/stock', encodeURI(props.search))
     .then((res)=>{
-        chartdataset([...chartdata, ...res.data])
+        chartdataset([...res.data])
+        drawset(true);
     })
-     },[])
+    .catch((err)=>{
+        console.log("회사 정보가 없어요. 다시 체크해주세요!");
+        drawset(false);
+    })
+  },[props.searchbutton])
+    
     return (  
         <div>
-         <LineChart
+          {
+            draw ===true
+            ?
+            <LineChart
             width={1500}
             height={700}
             data={chartdata}
             margin={{
-              top: 5, right: 30, left: 20, bottom: 5,
-            }}
+              top: 50, right: 30, left: 20, bottom: 5,
+            }
+          }
           >
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="날짜" />
             <YAxis yAxisId="left" />  
-            <YAxis yAxisId="right" orientation="right" />
+            <YAxis yAxisId="right" orientation="right" /> 
             <Tooltip />
             <Legend />
             <Line yAxisId="left" type="monotone" dataKey="등락률" stroke="#FF0000" activeDot={{ r: 8 }} />
             <Line yAxisId="right" type="monotone" dataKey="기사량" stroke="#00D8FF" />
         </LineChart>
+        :<h3>종목을 잘못 입력하셨습니다. 철자 확인해주세요~ </h3>
+          }
+         
 
-
-
-        
         </div>
     );  
 }

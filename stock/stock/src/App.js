@@ -1,10 +1,12 @@
 /*eslint-disable*/
 import './App.css';
-import React, {useState,lazy,Suspense,PureComponent} from 'react';
+import React, {useState,lazy,Suspense,useHistory,useParams} from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 //components
 //components
 let Stock_page = lazy(()=>{return import('./components/stock_page.js')});
+let Register = lazy(()=>{return import('./components/Register.js')});
+let Service = lazy(()=>{return import('./components/Service.js')});
 //bootstrap
 //bootstrap
 import {Navbar,Nav,NavDropdown,Button,Form,FormControl,Jumbotron,Container,Row,Col,Carousel,Card,Image} from 'react-bootstrap';
@@ -24,37 +26,46 @@ import Alarm from './image/Alarm.png';
 //data
 //data
 import Saying from './data/saying.js';
-import Samsung from './data/samsung.js';
 
 //MainMainMain
 //MainMainMain
 //MainMainMain
 function App() {
-
+  let [search,search_set] = useState("");
+  let [searchbutton,searchbutton_set] = useState(0);
   return (
     <div className="App">
+      <Navnav search={search} search_set={search_set} searchbutton={searchbutton} searchbutton_set = {searchbutton_set}></Navnav>
       <Switch>
         <Route exact path = "/">
-          <Navnav></Navnav>
+
           <Main_page></Main_page>
         </Route>
+
         <Route exact path="/service">
-          <Navnav></Navnav>
-         
-        </Route>
-        <Route path="/stock">
-          <Navnav></Navnav>
           <Suspense fallback = {<div>로딩중...</div>}>
-            <Stock_page></Stock_page>
+            <Service></Service>
+          </Suspense>
+        </Route>
+        
+        <Route path="/stock">
+          <Suspense fallback = {<div>로딩중...</div>}>
+            <Stock_page search={search} searchbutton ={searchbutton}></Stock_page>
           </Suspense>
         </Route>
 
         <Route path="/stock/:id">
-          <Navnav></Navnav>
           <Suspense fallback = {<div>로딩중...</div>}>
-            <Stock_page></Stock_page>
+            <Stock_page search={search}  searchbutton ={searchbutton}></Stock_page>
           </Suspense>
         </Route>
+
+        <Route path="/register">
+          <Suspense fallback = {<div>로딩중...</div>}>
+            <Register search={search}  searchbutton ={searchbutton}></Register>
+          </Suspense>
+        </Route>
+
       </Switch>
     </div>
   );
@@ -63,7 +74,7 @@ function App() {
 //Navbar 상단바 컴포넌트
 //Navbar 상단바 컴포넌트 
 //Navbar 상단바 컴포넌트
-function Navnav(){
+function Navnav(props){
   return(
     <div>
     <Navbar className = "Navbar1" expand="lg">
@@ -71,7 +82,7 @@ function Navnav(){
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="ml-auto">
-            <Nav.Link><Link to="/service">서비스</Link></Nav.Link>``
+            <Nav.Link><Link to="/service">서비스</Link></Nav.Link>
             <Nav.Link><Link to="/stock">주식종목</Link></Nav.Link>
             <NavDropdown title="회원정보" id="basic-nav-dropdown">
               <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
@@ -82,8 +93,9 @@ function Navnav(){
             </NavDropdown>
           </Nav>
           <Form inline>
-            <FormControl type="text" placeholder="예) 삼성전자" className="mr-sm-2" />
-            <Button variant="outline-success">Search</Button>
+            <FormControl type="text" placeholder="예) 삼성전자" className="mr-sm-2" onChange={(e)=>{props.search_set(e.target.value)}}/>
+            <Link to={"/stock/" + props.search}> <Button variant="outline-success" onClick = {()=>{props.searchbutton_set(props.searchbutton+1)}}>Search</Button></Link>
+            
           </Form>
         </Navbar.Collapse>
       </Navbar>
@@ -96,7 +108,7 @@ function Navnav(){
                   {/* <Image src={Saying[i].image} className="saying" /> */}
                   <Carousel.Caption>
                     </Carousel.Caption>
-                    <p style={{color:"white" ,"padding-top":"10px"}}>  - {Saying[i].name} - <br></br> {Saying[i].saying}  </p>
+                    <p style={{color:"white" ,"padding-top":"10px"}}>  {Saying[i].saying} <br/> - {Saying[i].name} - </p>
                      
                   
                 </Carousel.Item>
@@ -126,7 +138,7 @@ function Main_page(){
             </p>
             <p>
               <br></br><br></br>
-              <Button variant="primary">구독하기</Button>
+              <Button variant="primary" className="color_white"><Link to = "/register">구독하기</Link></Button>
             </p>
           </Jumbotron>
 
