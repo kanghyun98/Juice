@@ -7,6 +7,9 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 let Stock_page = lazy(()=>{return import('./components/stock_page.js')});
 let Register = lazy(()=>{return import('./components/Register.js')});
 let Service = lazy(()=>{return import('./components/Service.js')});
+let Interest = lazy(()=>{return import('./components/Interest.js')});
+let Chart = lazy(()=>{return import('./components/Chart.js')});
+
 //bootstrap
 //bootstrap
 import {Navbar,Nav,NavDropdown,Button,Form,FormControl,Jumbotron,Container,Row,Col,Carousel,Card,Image} from 'react-bootstrap';
@@ -66,6 +69,12 @@ function App() {
           </Suspense>
         </Route>
 
+
+        <Route path="/interest">
+          <Suspense fallback = {<div>로딩중...</div>}>
+            <Interest></Interest>
+          </Suspense>
+        </Route>
       </Switch>
     </div>
   );
@@ -85,7 +94,7 @@ function Navnav(props){
             <Nav.Link><Link to="/service">서비스</Link></Nav.Link>
             <Nav.Link><Link to="/stock">주식종목</Link></Nav.Link>
             <NavDropdown title="회원정보" id="basic-nav-dropdown">
-              <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
+              <NavDropdown.Item><Link to = "/interest">관심종목</Link></NavDropdown.Item>
               <NavDropdown.Item href="#action/3.2">Another action</NavDropdown.Item>
               <NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>
               <NavDropdown.Divider />.
@@ -105,18 +114,17 @@ function Navnav(props){
             Saying.map(function(a,i){
               return (
                 <Carousel.Item>
-                  {/* <Image src={Saying[i].image} className="saying" /> */}
-                  <Carousel.Caption>
-                    </Carousel.Caption>
-                    <p style={{color:"white" ,"padding-top":"10px"}}>  {Saying[i].saying} <br/> - {Saying[i].name} - </p>
-                     
+                 {/* <Image src={Saying[i].image} roundedCircle/> */}
                   
+                  <Carousel.Caption>
+                  </Carousel.Caption>
+                  <p style={{color:"white" ,"padding-top":"10px"}}>  {Saying[i].saying} <br/> - {Saying[i].name} - </p> 
                 </Carousel.Item>
               )
             })
           }
       </Carousel>
-
+            
       
       </div>
   );
@@ -138,7 +146,7 @@ function Main_page(){
             </p>
             <p>
               <br></br><br></br>
-              <Button variant="primary" className="color_white"><Link to = "/register">구독하기</Link></Button>
+              <Button variant="primary" ><Link to = "/register">구독하기</Link></Button>
             </p>
           </Jumbotron>
 
@@ -220,11 +228,7 @@ function Main_page(){
         </Carousel.Item>
       </Carousel>
       <hr/>
-
-
-      {/* <iframe src="https://public.tableau.com/profile/.67648575#!/vizhome/shared/QS3GGZ24X:showVizHome=no&amp;:embed=true" width="1024" height="700"></iframe> */}
-
-      
+     <Chart></Chart>
       </div>
   );
 }

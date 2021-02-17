@@ -6,10 +6,10 @@
 .App {
   text-align: center;
   font-family: 'BMHANNA_11yrs';
+
 }
 .Navbar1{
   color : white;
-
 }
 .main_background{
   background-image: url(./image/main.jpg);  
@@ -45,16 +45,20 @@
 .saying{
   width: auto;
   height: 200px;
-  background-color: darkblue;
+  background-color: #FFBB00;
   justify-content: center;
   align-items: center;
 }
 .sayingback{
   width: auto;
-  background-color:#0090FF;
+  background-color:#EDA900;
   height : 100px;
 }
 .color_white{
   color : white;
   text-align: center;
+}
+.register{
+  width: 700;
+  align-items: center;
 }
