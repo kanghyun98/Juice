@@ -8,7 +8,8 @@ let Stock_page = lazy(()=>{return import('./components/stock_page.js')});
 let Register = lazy(()=>{return import('./components/Register.js')});
 let Service = lazy(()=>{return import('./components/Service.js')});
 let Interest = lazy(()=>{return import('./components/Interest.js')});
-let Chart = lazy(()=>{return import('./components/Chart.js')});
+let Login = lazy(()=>{return import('./components/Login.js')});
+// let Chart = lazy(()=>{return import('./components/Chart.js')});
 
 //bootstrap
 //bootstrap
@@ -36,6 +37,7 @@ import Saying from './data/saying.js';
 function App() {
   let [search,search_set] = useState("");
   let [searchbutton,searchbutton_set] = useState(0);
+  let [id, id_set] = useState("");
   return (
     <div className="App">
       <Navnav search={search} search_set={search_set} searchbutton={searchbutton} searchbutton_set = {searchbutton_set}></Navnav>
@@ -69,6 +71,11 @@ function App() {
           </Suspense>
         </Route>
 
+        <Route path="/login">
+          <Suspense fallback = {<div>로딩중...</div>}>
+            <Login></Login>
+          </Suspense>
+        </Route>
 
         <Route path="/interest">
           <Suspense fallback = {<div>로딩중...</div>}>
@@ -228,7 +235,7 @@ function Main_page(){
         </Carousel.Item>
       </Carousel>
       <hr/>
-     <Chart></Chart>
+
       </div>
   );
 }
