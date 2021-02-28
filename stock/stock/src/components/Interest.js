@@ -6,7 +6,8 @@ function Interest(){
     useEffect(()=>{
         axios.get('/interest')
             .then((res)=>{
-                URLset("https://public.tableau.com/views/stockofKOSPI/test1?:language=en&:display_count=y&:origin=viz_share_link:showVizHome=no&:embed=true&코스피="+res.data[0].stock1+","+res.data[0].stock2+","+res.data[0].stock3+","+res.data[0].stock4+","+res.data[0].stock5+","
+                URLset("https://public.tableau.com/views/stockofKOSPI/test1?:language=en&:display_count=y&:origin=viz_share_link:showVizHome=no&:embed=true&코스피="
+                
                 )
                 })
             .catch((err)=>{
