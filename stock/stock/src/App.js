@@ -9,6 +9,7 @@ let Register = lazy(()=>{return import('./components/Register.js')});
 let Service = lazy(()=>{return import('./components/Service.js')});
 let Interest = lazy(()=>{return import('./components/Interest.js')});
 let Login = lazy(()=>{return import('./components/Login.js')});
+let Purchase = lazy(()=>{return import('./components/Purchase.js')});
 // let Chart = lazy(()=>{return import('./components/Chart.js')});
 
 //bootstrap
@@ -37,10 +38,14 @@ import Saying from './data/saying.js';
 function App() {
   let [search,search_set] = useState("");
   let [searchbutton,searchbutton_set] = useState(0);
-  let [id, id_set] = useState("");
+  let [id, idset] = useState("");
+
   return (
     <div className="App">
-      <Navnav search={search} search_set={search_set} searchbutton={searchbutton} searchbutton_set = {searchbutton_set}></Navnav>
+      {
+        
+      }
+      <Navnav id = {id} idset = {idset} search={search} search_set={search_set} searchbutton={searchbutton} searchbutton_set = {searchbutton_set}></Navnav>
       <Switch>
         <Route exact path = "/">
 
@@ -73,7 +78,7 @@ function App() {
 
         <Route path="/login">
           <Suspense fallback = {<div>로딩중...</div>}>
-            <Login></Login>
+            <Login idset={idset}></Login>
           </Suspense>
         </Route>
 
@@ -93,28 +98,49 @@ function App() {
 function Navnav(props){
   return(
     <div>
-    <Navbar className = "Navbar1" expand="lg">
-        <Navbar.Brand><Link to="">Stock Alarm</Link></Navbar.Brand>
-        <Navbar.Toggle aria-controls="basic-navbar-nav" />
-        <Navbar.Collapse id="basic-navbar-nav">
-          <Nav className="ml-auto">
-            <Nav.Link><Link to="/service">서비스</Link></Nav.Link>
-            <Nav.Link><Link to="/stock">주식종목</Link></Nav.Link>
-            <NavDropdown title="회원정보" id="basic-nav-dropdown">
-              <NavDropdown.Item><Link to = "/interest">관심종목</Link></NavDropdown.Item>
-              <NavDropdown.Item href="#action/3.2">Another action</NavDropdown.Item>
-              <NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>
-              <NavDropdown.Divider />.
-              <NavDropdown.Item href="#action/3.4">Separated link</NavDropdown.Item>
-            </NavDropdown>
-          </Nav>
-          <Form inline>
-            <FormControl type="text" placeholder="예) 삼성전자" className="mr-sm-2" onChange={(e)=>{props.search_set(e.target.value)}}/>
-            <Link to={"/stock/" + props.search}> <Button variant="outline-success" onClick = {()=>{props.searchbutton_set(props.searchbutton+1)}}>Search</Button></Link>
-            
-          </Form>
-        </Navbar.Collapse>
-      </Navbar>
+      {
+        props.id==""
+        ?
+        <Navbar className = "Navbar1" expand="lg">
+          <Navbar.Brand><Link to="">Stock Alarm</Link></Navbar.Brand>
+          <Navbar.Toggle aria-controls="basic-navbar-nav" />
+          <Navbar.Collapse id="basic-navbar-nav">
+            <Nav className="ml-auto">
+              <Nav.Link><Link to="/service">서비스</Link></Nav.Link>
+              <Nav.Link><Link to="/stock">주식종목</Link></Nav.Link>
+              <Nav.Link><Link to="/login">로그인</Link></Nav.Link>
+            </Nav>
+            <Form inline>
+              <FormControl type="text" placeholder="예) 삼성전자" className="mr-sm-2" onChange={(e)=>{props.search_set(e.target.value)}}/>
+              <Link to={"/stock/" + props.search}> <Button variant="outline-success" onClick = {()=>{props.searchbutton_set(props.searchbutton+1)}}>Search</Button></Link>
+              
+            </Form>
+          </Navbar.Collapse>
+        </Navbar>
+        :
+        <Navbar className = "Navbar1" expand="lg">
+          <Navbar.Brand><Link to="">Stock Alarm</Link></Navbar.Brand>
+          <Navbar.Toggle aria-controls="basic-navbar-nav" />
+          <Navbar.Collapse id="basic-navbar-nav">
+            <Nav className="ml-auto">
+              <Nav.Link><Link to="/service">서비스</Link></Nav.Link>
+              <Nav.Link><Link to="/stock">주식종목</Link></Nav.Link>
+              <NavDropdown title="회원정보" id="basic-nav-dropdown">
+                <NavDropdown.Item><Link to = "/interest">관심종목</Link></NavDropdown.Item>
+                <NavDropdown.Item><Link to = "/purchase">포트폴리오</Link></NavDropdown.Item>
+                <NavDropdown.Item onClick={()=>{props.idset("")}}>로그아웃</NavDropdown.Item>
+
+              </NavDropdown>
+            </Nav>
+            <Form inline>
+              <FormControl type="text" placeholder="예) 삼성전자" className="mr-sm-2" onChange={(e)=>{props.search_set(e.target.value)}}/>
+              <Link to={"/stock/" + props.search}> <Button variant="outline-success" onClick = {()=>{props.searchbutton_set(props.searchbutton+1)}}>Search</Button></Link>
+              
+            </Form>
+          </Navbar.Collapse>
+        </Navbar>
+      }
+    
       
       <Carousel className="sayingback">
           {

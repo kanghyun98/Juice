@@ -36,9 +36,50 @@ app.get('/',function(req,res){
 });
 
 app.post('/register',(req,res)=>{
-      //클라이언트에서 받아서 DB에 넣어주자
+    const name = req.body.name.name;
+    const email = req.body.email.email;
+    const birth = req.body.birth.birth;
+    const tel = req.body.tel.tel;
+    const password = req.body.password.password;
+    const sql = `INSERT INTO Client (name,email,birth,tel,password) VALUES(`+`'`+name+`'`+`,`+`'`+email+`'`+`,`+`'`
+    +birth+`'`+`,`+`'`+tel+`'`+`,`+`'`+password+`'`+`);`;
 
+    connection.query(sql,
+        function (err,rows,fields){
+           if(err){
+               console.log("회원가입 실패");
+               return res.send("회원가입 실패, 이미 가입된 이메일이거나 제출 형식에 문제가 있습니다.");
+           }
+           else{  
+            console.log("회원가입 성공");
+             return res.json(rows);
+            }
+        })
 })
+
+app.post('/login',(req,res)=>{
+    
+    const email = req.body.email.email;
+    const password = req.body.password.password;
+    const sql = `select * from Client where email = `+`'`+email+`'`;
+
+    connection.query(sql,
+        function (err,rows,fields){
+           if(err){
+               console.log("로그인 실패!");
+               return res.send(false);
+           }
+           else if (rows[0].password==password){
+               console.log("로그인 성공!")
+               return res.send(rows[0].email);
+           }
+           else{  
+                console.log("비밀번호가 틀렸습니다.")
+                 return res.send(false);
+            }
+        })
+})
+
 
 app.post('/stock',(req,res)=>{
     var body = qs.stringify(req.body);
@@ -77,6 +118,24 @@ app.get('/interest',function(req,res){
 });
 
 
+app.get('/purchase',function(req,res){
+
+    var sql =`SELECT * FROM Interest where user_id=100;`;
+    console.log(sql); 
+    connection.query(sql,
+    function (err,rows,fields){
+       if(err){
+           console.log("실패실패실패실패실패실패실패실패실패실패실패실패");
+           return res.send( err);
+       }
+       else{  
+        console.log("성공");
+         return res.json(rows);
+        }
+    })
+});
+
+
 app.get('*',function(req,res){
     res.sendFile(path.join(__dirname, '/build/index.html'));
 });
@@ -85,4 +144,4 @@ app.get('*',function(req,res){
 
 // mariadb 접속하기
 
-// mysql -u kljstock --host stockserver.cc2pdrlk4lu2.us-east-2.rds.amazonaws.com -P3306 -p
+//  

@@ -1,12 +1,14 @@
 import React, { useState } from "react";
-import Form from "react-bootstrap/Form";
-import Button from "react-bootstrap/Button";
+// import Form from "react-bootstrap/Form";
+// import Button from "react-bootstrap/Button";
 // import "./Login.css";
+import axios from 'axios';
+import {Form, Button, Alert} from 'react-bootstrap';
 
-export default function Login() {
+export default function Login(props) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
+  const [alert,alertset] = useState(true);
   function validateForm() {
     return email.length > 0 && password.length > 0;
   }
@@ -35,10 +37,36 @@ export default function Login() {
                 onChange={(e) => setPassword(e.target.value)}
             />
             </Form.Group>
-            <Button block size="lg" type="submit" disabled={!validateForm()}>
-            Login
+            <Button block size="lg" type="submit" disabled={!validateForm()} onClick={()=>{
+              axios.post('./login',{email:{email},password:{password}})
+              .then((res)=>{
+                if(res.data == false){
+                  alertset(false);
+                }
+                else{
+                  alertset(true);
+                  props.idset(email);
+                } 
+              })
+              .catch((err)=>{
+                alertset(false);
+              })
+            }}>
+            로그인
             </Button>
         </Form>
+          {
+            alert ===false
+            ? 
+            <Alert variant="danger">
+            <Alert.Heading>로그인 에러</Alert.Heading>
+            <p>
+              이메일 혹은 비밀번호가 틀렸습니다. 다시 확인해주세요.
+            </p>
+          </Alert>
+          :
+          null
+          }
         </div>
   );
 }

@@ -2,12 +2,13 @@ import React,{useState} from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {Alert} from 'react-bootstrap';
 import '../App.css';
+import axios from 'axios';
 function Register (){
     
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [phone, setPhone] = useState("");
+    const [tel, setTel] = useState("");
     const [birth, setBirth] = useState("");
     const [repassword, setRepassword] = useState("");
 
@@ -26,9 +27,14 @@ function Register (){
                     <input type="email" className="form-control" placeholder="StockService@naver.com" onChange={(e) => setEmail(e.target.value)}/>
                 </div>
 
-                <div className="form-group" style={{"width" : "700px", "align" : "center", "margin":"0 auto"}} onChange={(e) => setPhone(e.target.value)}>
+                <div className="form-group" style={{"width" : "700px", "align" : "center", "margin":"0 auto"}} onChange={(e) => setBirth(e.target.value)}>
+                    <label>생년월일</label>
+                    <input type="birth" className="form-control" placeholder="19970101" />
+                </div>
+
+                <div className="form-group" style={{"width" : "700px", "align" : "center", "margin":"0 auto"}} onChange={(e) => setTel(e.target.value)}>
                     <label>전화번호</label>
-                    <input type="number" className="form-control" placeholder="010-****-****" />
+                    <input type="tel" className="form-control" placeholder="010-****-****" />
                 </div>
 
                 <div className="form-group" style={{"width" : "700px", "align" : "center", "margin":"0 auto"}} onChange={(e) => setPassword(e.target.value)}>
@@ -41,8 +47,16 @@ function Register (){
                     <input type="password" className="form-control" placeholder="password" />
                 </div>
                 {
-                    password ==repassword
-                    ? <button type="submit" className="btn btn-primary btn-block">회원가입하기 </button>
+                    password ===repassword
+                    ? <button type="submit" className="btn btn-primary btn-block" onClick={()=>{
+                        axios.post('./register',{name : {name}, email :{email}, birth : {birth} , tel : {tel}, password : {password}})
+                        .then((res)=>{
+                            
+                        })
+                        .catch((err)=>{
+                              
+                        })
+                    }}>회원가입하기 </button>
                     :
                     <Alert variant="danger">
                     <Alert.Heading>비밀번호 확인 오류</Alert.Heading>
