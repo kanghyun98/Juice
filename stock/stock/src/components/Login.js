@@ -40,7 +40,7 @@ export default function Login(props) {
             <Button block size="lg" type="submit" disabled={!validateForm()} onClick={()=>{
               axios.post('./login',{email:{email},password:{password}})
               .then((res)=>{
-                if(res.data == false){
+                if(res.data === false){
                   alertset(false);
                 }
                 else{

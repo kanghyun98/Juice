@@ -29,11 +29,15 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use('/',express.static(path.join(__dirname,'/build')));
 // app.use('/stock',express.static(path.join(__dirname,'/build')));
-// app.use('*',express.static(path.join(__dirname,'/build')));
+app.use('*',express.static(path.join(__dirname,'/build')));
 
 app.get('/',function(req,res){
     req.sendFile(path.join(__dirname,'/build/index.html'));
 });
+
+// app.get('*',function(req,res){
+//     req.sendFile(path.join(__dirname,'/build/index.html'));
+// });
 
 app.post('/register',(req,res)=>{
     const name = req.body.name.name;
@@ -91,46 +95,32 @@ app.post('/stock',(req,res)=>{
     connection.query(sql,
     function (err,rows,fields){
        if(err){
-           console.log("실패실패실패실패실패실패실패실패실패실패실패실패");
+           console.log("종목 검색 실패");
            return res.send( err);
        }
        else{  
-         return res.send(rows)
+        console.log("종목 검색 성공");
+        console.log(rows);
+         return res.send(rows);
         }
     })
 })
 
-app.get('/interest',function(req,res){
-
-    var sql =`SELECT * FROM Interest where user_id=100;`;
+app.post('/interest',function(req,res){
+    var body = qs.stringify(req.body);
+    body = decodeURIComponent(body.slice(0,-1)); 
+    var sql =`SELECT stock FROM Interest where email =`+`'`+ body+`';`;
     console.log(sql); 
     connection.query(sql,
     function (err,rows,fields){
        if(err){
-           console.log("실패실패실패실패실패실패실패실패실패실패실패실패");
-           return res.send( err);
+           console.log("관심종목 실패");
+           return res.send(err);
        }
        else{  
-        console.log("성공");
-         return res.json(rows);
-        }
-    })
-});
-
-
-app.get('/purchase',function(req,res){
-
-    var sql =`SELECT * FROM Interest where user_id=100;`;
-    console.log(sql); 
-    connection.query(sql,
-    function (err,rows,fields){
-       if(err){
-           console.log("실패실패실패실패실패실패실패실패실패실패실패실패");
-           return res.send( err);
-       }
-       else{  
-        console.log("성공");
-         return res.json(rows);
+        console.log("관심종목 성공");
+            console.log(rows);
+            return res.json(rows);
         }
     })
 });
@@ -142,6 +132,6 @@ app.get('*',function(req,res){
 
 
 
-// mariadb 접속하기
+// // mariadb 접속하기
 
-//  
+// mysql -u kljstock --host stockserver.cc2pdrlk4lu2.us-east-2.rds.amazonaws.com -P3306 -p

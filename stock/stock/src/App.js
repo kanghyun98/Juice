@@ -9,7 +9,7 @@ let Register = lazy(()=>{return import('./components/Register.js')});
 let Service = lazy(()=>{return import('./components/Service.js')});
 let Interest = lazy(()=>{return import('./components/Interest.js')});
 let Login = lazy(()=>{return import('./components/Login.js')});
-let Purchase = lazy(()=>{return import('./components/Purchase.js')});
+let Portfolio = lazy(()=>{return import('./components/Portfolio.js')});
 // let Chart = lazy(()=>{return import('./components/Chart.js')});
 
 //bootstrap
@@ -84,7 +84,13 @@ function App() {
 
         <Route path="/interest">
           <Suspense fallback = {<div>로딩중...</div>}>
-            <Interest></Interest>
+            <Interest id={id}></Interest>
+          </Suspense>
+        </Route>
+
+        <Route path="/portfolio">
+          <Suspense fallback = {<div>로딩중...</div>}>
+            <Portfolio id={id}></Portfolio>
           </Suspense>
         </Route>
       </Switch>
@@ -127,9 +133,9 @@ function Navnav(props){
               <Nav.Link><Link to="/stock">주식종목</Link></Nav.Link>
               <NavDropdown title="회원정보" id="basic-nav-dropdown">
                 <NavDropdown.Item><Link to = "/interest">관심종목</Link></NavDropdown.Item>
-                <NavDropdown.Item><Link to = "/purchase">포트폴리오</Link></NavDropdown.Item>
+                <NavDropdown.Item><Link to = "/portfolio">포트폴리오</Link></NavDropdown.Item>
                 <NavDropdown.Item onClick={()=>{props.idset("")}}>로그아웃</NavDropdown.Item>
-
+                
               </NavDropdown>
             </Nav>
             <Form inline>
@@ -142,7 +148,7 @@ function Navnav(props){
       }
     
       
-      <Carousel className="sayingback">
+      <Carousel className="sayingback" prevIcon="" nextIcon="" indicators="">
           {
             Saying.map(function(a,i){
               return (

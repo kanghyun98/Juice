@@ -55,6 +55,8 @@ function Stock_page(props){
           }
          {draw===true?<Button onClick = {()=>{}} variant="warning" style = {{color : "white"}}>관심종목에 넣기</Button>: null}
          
+         {draw===true?<Button onClick = {()=>{}} variant="warning" style = {{color : "white"}}>포트폴리오에 넣기</Button>: null}
+         
         </div>
     );  
 }
