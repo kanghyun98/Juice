@@ -88,8 +88,8 @@ app.post('/login',(req,res)=>{
 app.post('/stock',(req,res)=>{
     var body = qs.stringify(req.body);
     body = decodeURIComponent(body.slice(0,-1)); 
-    var temp1 =`SELECT * FROM `;
-    var temp2 =`LIMIT 20`;
+    var temp1 =`SELECT * FROM (select* from `;
+    var temp2 =`order by date desc limit 22) as a order by date asc`;
     var sql = temp1.concat('`',body,'`',temp2); 
     console.log(sql); 
     connection.query(sql,
@@ -101,6 +101,7 @@ app.post('/stock',(req,res)=>{
        else{  
         console.log("종목 검색 성공");
         console.log(rows);
+        console.log(rows);
          return res.send(rows);
         }
     })
@@ -109,7 +110,7 @@ app.post('/stock',(req,res)=>{
 app.post('/interest',function(req,res){
     var body = qs.stringify(req.body);
     body = decodeURIComponent(body.slice(0,-1)); 
-    var sql =`SELECT stock FROM Interest where email =`+`'`+ body+`';`;
+    var sql =`SELECT DISTINCT stock FROM Interest where email =`+`'`+ body+`';`;
     console.log(sql); 
     connection.query(sql,
     function (err,rows,fields){
@@ -120,11 +121,30 @@ app.post('/interest',function(req,res){
        else{  
         console.log("관심종목 성공");
             console.log(rows);
-            return res.json(rows);
+            return res.send(rows);
         }
     })
 });
 
+app.post('/portfolio',function(req,res){
+    var body = qs.stringify(req.body);
+    body = decodeURIComponent(body.slice(0,-1)); 
+
+    var sql =`SELECT idx,email,name,date,price,count,all_price,choice,memo FROM portfolio where email =`+`'`+ body+`';`;
+
+    console.log(sql); 
+    connection.query(sql,function (err,rows,fields){
+       if(err){
+           console.log("포트폴리오 실패");
+           return res.send(err);
+       }
+       else{  
+            console.log("포트폴리오 성공");
+            console.log(rows);
+            return res.send(rows);
+        }
+    })
+});
 
 app.get('*',function(req,res){
     res.sendFile(path.join(__dirname, '/build/index.html'));
@@ -135,3 +155,6 @@ app.get('*',function(req,res){
 // // mariadb 접속하기
 
 // mysql -u kljstock --host stockserver.cc2pdrlk4lu2.us-east-2.rds.amazonaws.com -P3306 -p
+
+
+
