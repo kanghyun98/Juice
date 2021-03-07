@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 // import Form from "react-bootstrap/Form";
 // import Button from "react-bootstrap/Button";
 // import "./Login.css";
@@ -16,7 +16,13 @@ export default function Login(props) {
   function handleSubmit(event) {
     event.preventDefault();
   }
-
+  useEffect(()=>{
+    let temp = localStorage.getItem('email');
+    console.log(temp)
+    if(temp!==null){
+      props.idset(temp);
+    }
+  },[])
   return (
         <div className="Login" style={{"width" : "700px", "align" : "center", "margin":"0 auto"}}>
         <Form onSubmit={handleSubmit}>
@@ -46,6 +52,7 @@ export default function Login(props) {
                 else{
                   alertset(true);
                   props.idset(email);
+                  localStorage.setItem('email',props.id)
                 } 
               })
               .catch((err)=>{

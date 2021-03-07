@@ -107,6 +107,7 @@ app.post('/stock',(req,res)=>{
     })
 })
 
+//관심종목
 app.post('/interest',function(req,res){
     var body = qs.stringify(req.body);
     body = decodeURIComponent(body.slice(0,-1)); 
@@ -120,6 +121,44 @@ app.post('/interest',function(req,res){
        }
        else{  
         console.log("관심종목 성공");
+            return res.send(rows);
+        }
+    })
+});
+//관심종목 삭제
+app.post('/interest_delete',function(req,res){
+    var body = qs.stringify(req.body);
+    body = decodeURIComponent(body.slice(0,-1)); 
+    var sql =`Delete from Interest where stock = ` + `'` + body+`';`;
+    console.log(sql); 
+    connection.query(sql,
+    function (err,rows,fields){
+       if(err){
+           console.log("관심종목 삭제 실패");
+           return res.send(err);
+       }
+       else{  
+        console.log("관심종목 삭제 성공");
+            console.log(rows);
+            return res.send(rows);
+        }
+    })
+});
+
+//관심종목 추가
+app.post('/interest_add',function(req,res){
+    var email = req.body.email;
+    var stock = decodeURIComponent(req.body.stock);
+    var sql =`Insert into Interest VALUES(` +`'`+email+`',`+`'`+stock+`');`;
+    console.log(sql); 
+    connection.query(sql,
+    function (err,rows,fields){
+       if(err){
+           console.log("관심종목 추가 실패");
+           return res.send(err);
+       }
+       else{  
+        console.log("관심종목 추가 성공");
             console.log(rows);
             return res.send(rows);
         }

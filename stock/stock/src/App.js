@@ -78,7 +78,7 @@ function App() {
 
         <Route path="/login">
           <Suspense fallback = {<div>로딩중...</div>}>
-            <Login idset={idset}></Login>
+            <Login idset={idset} id ={id}></Login>
           </Suspense>
         </Route>
 
@@ -134,7 +134,10 @@ function Navnav(props){
               <NavDropdown title="회원정보" id="basic-nav-dropdown">
                 <NavDropdown.Item><Link to = "/interest">관심종목</Link></NavDropdown.Item>
                 <NavDropdown.Item><Link to = "/portfolio">포트폴리오</Link></NavDropdown.Item>
-                <NavDropdown.Item onClick={()=>{props.idset("")}}>로그아웃</NavDropdown.Item>
+                <NavDropdown.Item onClick={()=>{
+                  props.idset("");
+                  localStorage.removeItem('email');
+              }}>로그아웃</NavDropdown.Item>
                 
               </NavDropdown>
             </Nav>
