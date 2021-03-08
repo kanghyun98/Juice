@@ -12,6 +12,12 @@ function Stock_page(props){
   let [chartdata,chartdataset]=useState([]);
   let [draw,drawset] = useState(false);
  
+  useEffect(()=>{
+    let temp = localStorage.getItem('email');
+    console.log(temp); 
+    props.idset(temp);
+  },[]);
+  
    useEffect(()=>{
     axios.post('/stock', encodeURIComponent(props.search))
     .then((res)=>{

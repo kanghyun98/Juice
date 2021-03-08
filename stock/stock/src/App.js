@@ -1,6 +1,6 @@
 /*eslint-disable*/
 import './App.css';
-import React, {useState,lazy,Suspense,useHistory,useParams} from 'react';
+import React, {useState,lazy,Suspense,useHistory,useParams,useEffect} from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 //components
 //components
@@ -40,6 +40,12 @@ function App() {
   let [searchbutton,searchbutton_set] = useState(0);
   let [id, idset] = useState("");
 
+  useEffect(()=>{
+    let temp = localStorage.getItem('email');
+    console.log(temp); 
+    idset(temp);
+  },[])
+
   return (
     <div className="App">
       {
@@ -59,38 +65,38 @@ function App() {
         </Route>
         
         <Route path="/stock">
-          <Suspense fallback = {<div>로딩중...</div>}>
-            <Stock_page search={search} searchbutton ={searchbutton}></Stock_page>
+          <Suspense fallback = {<div> 로딩중...</div>}>
+            <Stock_page search={search} searchbutton ={searchbutton} idset = {idset}></Stock_page>
           </Suspense>
         </Route>
 
         <Route path="/stock/:id">
           <Suspense fallback = {<div>로딩중...</div>}>
-            <Stock_page search={search}  searchbutton ={searchbutton}></Stock_page>
+            <Stock_page search={search} idset = {idset} searchbutton ={searchbutton}></Stock_page>
           </Suspense>
         </Route>
 
         <Route path="/register">
           <Suspense fallback = {<div>로딩중...</div>}>
-            <Register search={search}  searchbutton ={searchbutton}></Register>
+            <Register search={search} idset = {idset} searchbutton ={searchbutton}></Register>
           </Suspense>
         </Route>
 
         <Route path="/login">
           <Suspense fallback = {<div>로딩중...</div>}>
-            <Login idset={idset} id ={id}></Login>
+            <Login idset={idset} id ={id} idset = {idset}></Login>
           </Suspense>
         </Route>
 
         <Route path="/interest">
           <Suspense fallback = {<div>로딩중...</div>}>
-            <Interest id={id}></Interest>
+            <Interest id={id} idset = {idset}></Interest>
           </Suspense>
         </Route>
 
         <Route path="/portfolio">
           <Suspense fallback = {<div>로딩중...</div>}>
-            <Portfolio id={id}></Portfolio>
+            <Portfolio id={id} idset = {idset}></Portfolio>
           </Suspense>
         </Route>
       </Switch>
@@ -105,7 +111,7 @@ function Navnav(props){
   return(
     <div>
       {
-        props.id==""
+        props.id===""||props.id===null
         ?
         <Navbar className = "Navbar1" expand="lg">
           <Navbar.Brand><Link to="">Stock Alarm</Link></Navbar.Brand>

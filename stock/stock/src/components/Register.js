@@ -1,9 +1,9 @@
-import React,{useState} from 'react';
+import React,{useState,useEffect} from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {Alert} from 'react-bootstrap';
 import '../App.css';
 import axios from 'axios';
-function Register (){
+function Register (props){
     
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
@@ -11,6 +11,12 @@ function Register (){
     const [tel, setTel] = useState("");
     const [birth, setBirth] = useState("");
     const [repassword, setRepassword] = useState("");
+
+    useEffect(()=>{
+        let temp = localStorage.getItem('email');
+        console.log(temp); 
+        props.idset(temp);
+      },[])
 
     return (
       <div>

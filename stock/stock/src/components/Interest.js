@@ -8,6 +8,12 @@ function Interest(props){
    let [cart,cartset] =useState([]);
    let [add,addset] = useState("");
    useEffect(()=>{
+    let temp = localStorage.getItem('email');
+    console.log(temp); 
+    props.idset(temp);
+  },[])
+
+   useEffect(()=>{
         axios.post('/interest', encodeURIComponent(props.id))
         .then((res)=>{
           console.log("좋아 관심종목 데이터 받았어");
