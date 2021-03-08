@@ -189,10 +189,6 @@ app.get('*',function(req,res){
     res.sendFile(path.join(__dirname, '/build/index.html'));
 });
 
-
-
-// // mariadb 접속하기
-
 // mysql -u kljstock --host stockserver.cc2pdrlk4lu2.us-east-2.rds.amazonaws.com -P3306 -p
 
 
