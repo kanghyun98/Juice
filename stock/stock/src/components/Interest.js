@@ -4,7 +4,7 @@ import { RESERVED_EVENTS } from 'socket.io/dist/socket';
 import {Modal, Button,Table,Form,FormControl,Card,Accordion} from 'react-bootstrap';
 
 function Interest(props){
-   let [URL,URLset] = useState("https://public.tableau.com/views/juice_16149437075470/interest?:language=en&:display_count=y&:origin=viz_share_link:showVizHome=no&:embed=true&Stock=");
+   let [URL,URLset] = useState("https://public.tableau.com/views/juice_16149437075470/interest?:language=en&:display_count=y&:origin=viz_share_link:showVizHome=no&:embed=true&종목명=");
    let [cart,cartset] =useState([]);
    let [add,addset] = useState("");
    useEffect(()=>{

@@ -4,9 +4,13 @@ import axios from 'axios';
 import {Form,FormControl,Button,Modal,Table,Card,Accordion} from 'react-bootstrap';
 
 function Portfolio(props){
-      let [cart, cartset] = useState([]);
-        let [modify, modify_set] =useState(false);
-       
+  let [URL,URLset] = useState("https://public.tableau.com/views/juice_16149437075470/portfolio?:language=en&:display_count=y&:origin=viz_share_link:showVizHome=no&:embed=true&Email="+props.id);
+  let [cart, cartset] = useState([]);
+      const [modalState, setModalState] = useState({
+        showModal: false,
+        stockInfo: {},
+     });
+     
         useEffect(()=>{
           let temp = localStorage.getItem('email');
           console.log(temp); 
@@ -17,8 +21,7 @@ function Portfolio(props){
           axios.post('/portfolio', encodeURIComponent(props.id))
           .then((res)=>{
                 console.log("좋아 포트폴리오 데이터 받았어");
-                cartset([...cart, ...res.data]);
-                console.log(cart);
+                cartset([...res.data]);
           })
           .catch((err)=>{
               console.log("다시 체크해주세요!");
@@ -27,6 +30,8 @@ function Portfolio(props){
 
         return (
             <div>
+              {URL}
+              <iframe src={URL} width="1500px" height="950px"></iframe>
                <Accordion>
                   <Card>
                     <Card.Header>
@@ -62,9 +67,12 @@ function Portfolio(props){
                                     <td style = {{width : "300px", textAlign : "center"}}>{cart[i]?.memo}</td>
 
                                     <td> <Button style = {{width : "70px", textAlign : "center"}} variant="secondary" 
-                                    onClick={()=>{
-                                      modify_set(true);
-                                      }}>
+                                    onClick={() => {
+                                        setModalState({
+                                            stockInfo: cart[i],
+                                            showModal: true,
+                                        })
+                                    }}>
                                       수정</Button></td>
                                       
                                     
@@ -80,7 +88,7 @@ function Portfolio(props){
                            cart.map(function(a,i){
                              return (
                                <div>
-                                   <Modify modify={modify} modify_set={modify_set} cart = {cart[i]}></Modify>  
+                                   <Modify modalState={modalState} setModalState={setModalState}></Modify>
                                </div>
                              )
                            })
@@ -101,10 +109,9 @@ function Portfolio(props){
 
 
 function Modify(props) {
-  
   return (
     <>
-      <Modal show={props.modify} size = "xl" animation={true}>
+      <Modal show={props.modalState.showModal} size = "xl" animation={true}>
           <Modal.Header closeButton>
             <Modal.Title>종목 수정</Modal.Title>
           </Modal.Header>
@@ -119,32 +126,34 @@ function Modify(props) {
                     <th style = {{width : "100px", textAlign : "center"}}>수량</th>
                     <th style = {{width : "300px", textAlign : "center"}}>매수 / 매도</th>
                     <th style = {{width : "300px", textAlign : "center"}}>메모</th>
-                    <th style = {{width : "70px", textAlign : "center"}}>수정</th>
-                    <th style = {{width : "70px", textAlign : "center"}}>삭제</th>
                   </tr>
                
                 </thead>
                 <tbody>
-                        <td style = {{width : "200px", textAlign : "center"}}>{props.cart.name} </td>
-                        <td style = {{width : "200px", textAlign : "center"}}>{props.cart.date} </td>
-                        <td style = {{width : "200px", textAlign : "center"}}>{props.cart.price} </td>
-                        <td style = {{width : "200px", textAlign : "center"}}>{props.cart.count} </td>
-                        <td style = {{width : "200px", textAlign : "center"}}>{props.cart.all_price} </td>
-                        <td style = {{width : "200px", textAlign : "center"}}>{props.cart.memo} </td>
-                        <td style = {{width : "200px", textAlign : "center"}}>수정</td>
-                        <td style = {{width : "200px", textAlign : "center"}}>삭제</td>
+                    <td style = {{width : "200px", textAlign : "center"}}>{props.modalState.stockInfo.name} </td>
+                    <td style = {{width : "200px", textAlign : "center"}}>{props.modalState.stockInfo.date} </td>
+                    <td style = {{width : "200px", textAlign : "center"}}>{props.modalState.stockInfo.price} </td>
+                    <td style = {{width : "200px", textAlign : "center"}}>{props.modalState.stockInfo.count} </td>
+                    <td style = {{width : "200px", textAlign : "center"}}>{props.modalState.stockInfo.all_price} </td>
+                    <td style = {{width : "200px", textAlign : "center"}}>{props.modalState.stockInfo.memo} </td>
                 </tbody>
               </Table>
           </Modal.Body>
 
           <Modal.Footer>
             <Button variant="secondary" onClick={()=>{
-              props.modify_set(false)
+              props.setModalState({
+                stockInfo: "",
+                showModal : false
+            })
             }}>
               닫기
             </Button>
-            <Button variant="primary" onClick={()=>{
-              props.modify_set(false)
+            <Button variant="primary" onClick ={()=>{
+              props.setModalState({
+              stockInfo: "",
+               showModal : false,
+              })
             }}>
               저장하기
             </Button>

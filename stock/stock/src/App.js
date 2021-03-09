@@ -108,6 +108,7 @@ function App() {
 //Navbar 상단바 컴포넌트 
 //Navbar 상단바 컴포넌트
 function Navnav(props){
+
   return(
     <div>
       {
@@ -182,6 +183,7 @@ function Navnav(props){
 //메인 페이지 컴포넌트
 //메인 페이지 컴포넌트
 function Main_page(){
+  let [URL,URLset] = useState("https://public.tableau.com/views/juice_16149437075470/wordcloud?:language=en&:display_count=y&:origin=viz_share_link:showVizHome=no&:embed=true&종목명=");
   return(
     <div>
         <Jumbotron className="main_background">
@@ -198,6 +200,12 @@ function Main_page(){
             </p>
           </Jumbotron>
 
+
+
+          <Jumbotron style={{backgroundColor : "black", color : "white"}}>
+            <h1>워드클라우드</h1>
+            <iframe src={URL} width="90%" height="950px"></iframe>
+          </Jumbotron>
       <Container>
         <h3 className="title1">대표 종목 예시 </h3>
         <Row justify-content-center>
