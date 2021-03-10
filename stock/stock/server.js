@@ -66,7 +66,7 @@ app.post('/login',(req,res)=>{
     const email = req.body.email.email;
     const password = req.body.password.password;
     const sql = `select * from Client where email = `+`'`+email+`'`;
-
+    console.log(sql);
     connection.query(sql,
         function (err,rows,fields){
            if(err){
@@ -210,6 +210,115 @@ app.post('/portfolio_sell',function(req,res){
     })
 });
 
+//포트폴리오 매수
+app.post('/portfolio_buy',function(req,res){
+    const name = req.body.name.name;
+    const email = req.body.email.email;
+    const date = req.body.date.date;
+    const price = req.body.price.price;
+    const count = req.body.count.count;
+    const memo = req.body.memo.memo;
+
+    const sql = `INSERT INTO portfolio (email, name, date, price, count, all_price, choice, memo)
+     VALUES(`+`'`+email+`'`+`,`+`'`+name+`'`+`,`+`'`+date+`',`+price+`,`+count+`,`+price*count+`,'`+"매수"+`'`+`,'`+memo+`');`;
+
+     connection.query(sql,function (err,rows,fields){
+       if(err){
+           console.log("포트폴리오 매도 실패");
+           return res.send(err);
+       }
+       else{  
+            console.log("포트폴리오 매도 성공");
+            console.log(rows);
+            return res.send(rows);
+        }
+    })
+    // const sql2=`insert into portfolio_target(email,name) values('`+email+`', '`+name+ `')`;
+
+    // connection.query(sql2,function (err,rows,fields){
+    //     if(err){
+    //         console.log("포트폴리오 매도 실패");
+    //         return res.send(err);
+    //     }
+    //     else{  
+    //          console.log("포트폴리오 매도 성공");
+    //          console.log(rows);
+    //          return res.send(rows);
+    //      }
+    //  })
+ 
+
+});
+
+//포트폴리오 삭제
+app.post('/portfolio_delete',function(req,res){
+    var body = qs.stringify(req.body);
+    body = decodeURIComponent(body.slice(0,-1)); 
+    var sql =`Delete from portfolio where idx = ` + `'` + body+`';`;
+
+    console.log(sql);
+
+    connection.query(sql,function (err,rows,fields){
+       if(err){
+           console.log("포트폴리오 삭제 실패");
+           return res.send(err);
+       }
+       else{  
+        console.log("포트폴리오 삭제 성공");
+            console.log(rows);
+            return res.send(rows);
+        }
+    })
+
+    // var sql2 =`Delete from portfolio_target where email = ` + `'` + body+`'` +`and stock = ` +`'`+ stock+`';` ;
+    // console.log(sql2);
+    // connection.query(sql2,function (err,rows,fields){
+    //    if(err){
+    //        console.log("포트폴리오 삭제 실패");
+    //        return res.send(err);
+    //    }
+    //    else{  
+    //     console.log("포트폴리오 삭제 성공");
+    //         console.log(rows);
+    //         return res.send(rows);
+    //     }
+    // })
+});
+
+// 포트폴리오 수정
+app.post('/portfolio_modify',function(req,res){
+    const name = req.body.name.name;
+    const email = req.body.email.email;
+    const date = req.body.date.date;
+    const price = req.body.price.price;
+    const memo = req.body.memo.memo;
+    const idx = req.body.idx.idx;
+    const choice = req.body.choice.choice;
+    const count = req.body.count.count;
+    var sql;
+
+    if(choice==="매수"){
+        sql = `Update portfolio set date=`+`'`+date+`',price=`+price+`,count=`+count+`,memo=`+`'`+memo+`',all_price = `+`'`+ price*count+`'`+
+        `where email=`+`'`+email+`'` +`and name = `+`'`+name+`'`+`and idx=`+idx+`;`;
+    }
+    else{
+        sql = `Update portfolio set date=`+`'`+date+`',price=`+price+`,count=`+count*(-1)+`,memo=`+`'`+memo+`',all_price = `+`'`+ price*count*(-1)+`'`+
+        `where email=`+`'`+email+`'` +`and name = `+`'`+name+`'`+`and idx=`+idx+`;`
+    }
+  
+    console.log(sql);
+    connection.query(sql,function (err,rows,fields){
+       if(err){
+           console.log("포트폴리오 수정 실패");
+           return res.send(err);
+       }
+       else{  
+            console.log("포트폴리오 수정 성공");
+            console.log(rows);
+            return res.send(rows);
+        }
+    })
+});
 
 
 app.get('*',function(req,res){
@@ -217,6 +326,3 @@ app.get('*',function(req,res){
 });
 
 // mysql -u kljstock --host stockserver.cc2pdrlk4lu2.us-east-2.rds.amazonaws.com -P3306 -p
-
-
-
