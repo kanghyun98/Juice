@@ -2,7 +2,7 @@
 import React,{useState,useEffect} from 'react';
 import axios from 'axios';
 import {Form,FormControl,Button,Modal,Table,Card,Accordion} from 'react-bootstrap';
-
+import moment from 'moment';
 function Portfolio(props){
   let [URL,URLset] = useState("https://public.tableau.com/views/juice_16149437075470/portfolio?:language=en&:display_count=y&:origin=viz_share_link:showVizHome=no&:embed=true&Email="+props.id);
   let [cart, cartset] = useState([]);
@@ -11,6 +11,21 @@ function Portfolio(props){
         stockInfo: {},
      });
      
+      const [sell, setsell] = useState({
+      showModal: false,
+      stockInfo: {},
+      });
+
+      const [buy, setbuy] = useState({
+        showModal: false,
+        stockInfo: {},
+      });
+
+      const [cash, setcash] = useState({
+        showModal: false,
+        stockInfo: {},
+      });
+
         useEffect(()=>{
           let temp = localStorage.getItem('email');
           console.log(temp); 
@@ -95,7 +110,15 @@ function Portfolio(props){
                          }
                         <Button style = {{width : "90px", textAlign : "center", alignContent :"flex-end"}} variant="secondary">현금관리</Button> 
                         <Button style = {{width : "90px", textAlign : "center", alignContent :"right"}} variant="secondary">매수</Button> 
-                        <Button style = {{width : "90px", textAlign : "center", alignContent :"right"}} variant="secondary">매도</Button>  
+                        <Button style = {{width : "90px", textAlign : "center", alignContent :"right"}} variant="secondary" 
+                        onClick={()=>{
+                          setsell({
+                            stockInfo: "",
+                            showModal: true,
+                        })
+                        }}
+                        >매도</Button>  
+                        <Sell sell={sell} setsell={setsell} id={props.id}></Sell>
                       </Card.Body>
                     </Accordion.Collapse>
                   </Card> 
@@ -162,5 +185,92 @@ function Modify(props) {
     </>
   );
 }
+
+
+function Sell(props){
+    const [name, setname] = useState("");
+    const [date, setdate] = useState("");
+    const [price, setprice] = useState(0);
+    const [count, setcount] = useState(0);
+    const [memo, setmemo] = useState("");
+    const email = props.id;
+    return (
+      <>
+        <Modal show={props.sell.showModal} size = "xl" animation={true}>
+              <Modal.Header closeButton>
+                <Modal.Title>종목 수정</Modal.Title>
+              </Modal.Header>
+                      
+              <Modal.Body>
+                  <Table striped bordered hover variant="dark">
+                    <thead>
+                      <tr>
+                        <th style = {{width : "200px", textAlign : "center"}}>종목명</th>
+                        <th style = {{width : "200px", textAlign : "center"}}>날짜</th>
+                        <th style = {{width : "300px", textAlign : "center"}}>금액</th>
+                        <th style = {{width : "300px", textAlign : "center"}}>수량</th>
+                        <th style = {{width : "300px", textAlign : "center"}}>매수 / 매도</th>
+                        <th style = {{width : "300px", textAlign : "center"}}>메모</th>
+                      </tr>
+                  
+                    </thead>
+                    <tbody style ={{ textAlign : "center", align : "center",  margin :"0 auto"}}>
+                  <td>
+                    <input type="text" className="form-control" placeholder="삼성전자" onChange={(e) => setname(e.target.value)}/>
+                  </td>
+
+                  <td>
+                    <input type="date" className="form-control" onChange={(e) => setdate(e.target.value.toString())}/>
+                  </td>
+
+                  <td>
+                    <input type="price" className="form-control" placeholder="0 원"  onChange={(e) => setprice(e.target.value)}/>
+                  </td>
+
+                  <td>
+                    <input type="number" className="form-control" placeholder="0 주"  onChange={(e) => setcount(e.target.value)}/>
+                  </td>
+
+                  <td>
+                    매도
+                  </td>
+
+                  <td>
+                    <input type="text" className="form-control" placeholder="메모"  onChange={(e) => setmemo(e.target.value)}/>
+                  </td>
+                    </tbody>
+                  </Table>
+              </Modal.Body>
+              
+              <Modal.Footer>
+                <Button variant="secondary" onClick={()=>{
+                  props.setsell({
+                    stockInfo: "",
+                    showModal : false
+                })
+                }}>
+                  닫기
+                </Button>
+                
+                <Button variant="primary" onClick ={()=>{
+                  props.setsell({
+                  stockInfo: "",
+                  showModal : false,
+                  })
+                  axios.post('/portfolio_sell',{name : {name}, date : {date}, price : {price}, count : {count}, memo : {memo}, email:{email}})
+                  .then(()=>{
+                    
+                  })
+                  .catch(()=>{
+
+                  })
+                }}>
+                  저장하기
+                </Button>
+              </Modal.Footer>
+            </Modal>   
+      </>
+    )
+  }
 
 export default Portfolio;

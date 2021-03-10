@@ -185,6 +185,33 @@ app.post('/portfolio',function(req,res){
     })
 });
 
+//포트폴리오 매도
+app.post('/portfolio_sell',function(req,res){
+    const name = req.body.name.name;
+    const email = req.body.email.email;
+    const date = req.body.date.date;
+    const price = req.body.price.price;
+    const count = req.body.count.count;
+    const memo = req.body.memo.memo;
+
+    const sql = `INSERT INTO portfolio (email, name, date, price, count, all_price, choice, memo)
+     VALUES(`+`'`+email+`'`+`,`+`'`+name+`'`+`,`+`'`+date+`',`+price+`,`+count*(-1)+`,`+price*count*(-1)+`,'`+"매도"+`'`+`,'`+memo+`');`;
+    console.log(sql);
+    connection.query(sql,function (err,rows,fields){
+       if(err){
+           console.log("포트폴리오 매도 실패");
+           return res.send(err);
+       }
+       else{  
+            console.log("포트폴리오 매도 성공");
+            console.log(rows);
+            return res.send(rows);
+        }
+    })
+});
+
+
+
 app.get('*',function(req,res){
     res.sendFile(path.join(__dirname, '/build/index.html'));
 });

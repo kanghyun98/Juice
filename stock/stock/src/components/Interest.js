@@ -30,7 +30,7 @@ function Interest(props){
     return (
         <div>
           {URL}
-            <iframe src={URL} width="1500px" height="950px"></iframe>
+            <iframe src={URL} width="100%" height="950px"></iframe>
             <br/>
             <Add_Button id = {props.id} cart = {cart} add={add} addset={addset}></Add_Button>
             <br/>
@@ -115,5 +115,16 @@ function Add_Button(props) {
     );
 }
 
+function sell(props){
+
+//   insert into portfolio(email, name, date, price, count, all_price, choice, memo)
+// values ('이메일','종목명','날짜',매도가격,수량*(-1),매도가격*수량,'매도','메모');
+
+  return (
+    <>
+  
+    </>
+  )
+}
 
 export default Interest;
