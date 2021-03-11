@@ -320,7 +320,49 @@ app.post('/portfolio_modify',function(req,res){
     })
 });
 
+// 포트폴리오 현금 입금
+app.post('/portfolio_put',function(req,res){
+    const email = req.body.email.email;
+    const date = req.body.date.date;
+    const price = req.body.price.price;
+    const memo = req.body.memo.memo;
+    var sql = `insert into portfolio (email,name,date,price,count,choice,memo,all_price) VALUES ('`
+    +email+ `','현금','`+date+`',`+price+`,1,'입금','`+memo+`',0);`
+    console.log(sql);
+    connection.query(sql,function (err,rows,fields){
+       if(err){
+           console.log("포트폴리오  입금 실패");
+           return res.send(err);
+       }
+       else{  
+            console.log("포트폴리오 입금 성공");
+            console.log(rows);
+            return res.send(rows);
+        }
+    })
+});
 
+//포트폴리오 현금 출금
+app.post('/portfolio_pull',function(req,res){
+    const email = req.body.email.email;
+    const date = req.body.date.date;
+    const price = req.body.price.price;
+    const memo = req.body.memo.memo;
+    var sql = `insert into portfolio (email,name,date,price,count,choice,memo,all_price) VALUES ('`
+    +email+ `','현금','`+date+`',`+price+`,-1,'출금','`+memo+`',0);`
+    console.log(sql);
+    connection.query(sql,function (err,rows,fields){
+       if(err){
+           console.log("포트폴리오  입금 실패");
+           return res.send(err);
+       }
+       else{  
+            console.log("포트폴리오 입금 성공");
+            console.log(rows);
+            return res.send(rows);
+        }
+    })
+});
 app.get('*',function(req,res){
     res.sendFile(path.join(__dirname, '/build/index.html'));
 });

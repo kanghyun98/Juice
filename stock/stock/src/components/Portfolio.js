@@ -415,6 +415,7 @@ function Cash(props){
   const [date, setdate] = useState("");
   const [price, setprice] = useState(0);
   const [count, setcount] = useState(0);
+  const [choice, setchoice] = useState("");
   const [memo, setmemo] = useState("");
   const email = props.id;
   return (
@@ -428,20 +429,15 @@ function Cash(props){
                 <Table striped bordered hover variant="dark">
                   <thead>
                     <tr>
-                      <th style = {{width : "200px", textAlign : "center"}}>종목명</th>
+               
                       <th style = {{width : "200px", textAlign : "center"}}>날짜</th>
                       <th style = {{width : "300px", textAlign : "center"}}>금액</th>
-                      <th style = {{width : "300px", textAlign : "center"}}>수량</th>
-                      <th style = {{width : "300px", textAlign : "center"}}>매수 / 매도</th>
                       <th style = {{width : "300px", textAlign : "center"}}>메모</th>
+                      <th style = {{width : "300px", textAlign : "center"}}>입금/출금</th>
                     </tr>
                 
                   </thead>
                   <tbody style ={{ textAlign : "center", align : "center",  margin :"0 auto"}}>
-                <td>
-                  <input type="text" className="form-control" placeholder="삼성전자" onChange={(e) => setname(e.target.value)}/>
-                </td>
-
                 <td>
                   <input type="date" className="form-control" onChange={(e) => setdate(e.target.value.toString())}/>
                 </td>
@@ -449,17 +445,42 @@ function Cash(props){
                 <td>
                   <input type="price" className="form-control" placeholder="0 원"  onChange={(e) => setprice(e.target.value)}/>
                 </td>
-
-                <td>
-                  <input type="number" className="form-control" placeholder="0 주"  onChange={(e) => setcount(e.target.value)}/>
-                </td>
-
-                <td>
-                  매도
-                </td>
-
                 <td>
                   <input type="text" className="form-control" placeholder="메모"  onChange={(e) => setmemo(e.target.value)}/>
+                </td>
+                <td>
+                <Button variant="primary" onClick={()=>{
+                props.setcash({
+                  stockInfo: "",
+                  showModal : false
+              });
+                  axios.post('/portfolio_put',{email:{email}, name:{name}, date:{date}, price:{price},memo:{memo}})
+                  .then(()=>{ 
+
+                  })
+                  .catch(()=>{
+
+                  });
+
+              }}>
+                입금 
+              </Button>
+
+              <Button variant="primary" onClick={()=>{
+                props.setcash({
+                  stockInfo: "",
+                  showModal : false
+              });
+                axios.post('/portfolio_pull',{email:{email}, name:{name}, date:{date}, price:{price},memo:{memo}})
+                .then(()=>{ 
+
+                })
+                .catch(()=>{  
+
+                });
+              }}>
+                출금
+              </Button>
                 </td>
                   </tbody>
                 </Table>
@@ -474,21 +495,6 @@ function Cash(props){
                 닫기
               </Button>
               
-              <Button variant="primary" onClick ={()=>{
-                props.setcash({
-                stockInfo: "",
-                showModal : false,
-                })
-                // axios.post('/portfolio_buy',{name : {name}, date : {date}, price : {price}, count : {count}, memo : {memo}, email:{email}})
-                // .then(()=>{
-                //   console.log("매수 추가 성공")
-                // })
-                // .catch(()=>{
-                //   console.log("매수 추가 실패")
-                // })
-              }}>
-                저장하기
-              </Button>
             </Modal.Footer>
           </Modal>   
     </>
