@@ -103,4 +103,4 @@ export default
         ,image : "./그레이엄.png"
     }
     
-]
+]   

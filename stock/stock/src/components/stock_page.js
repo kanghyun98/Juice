@@ -6,12 +6,13 @@ import {
     LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend,ComposedChart,Area,Bar
   } from 'recharts';
 import {Form,FormControl,Button} from 'react-bootstrap';
-import { Zoom } from '@material-ui/core';
-//
+
+import ChartViewer from './Chart.js';
+
 function Stock_page(props){
   let [chartdata,chartdataset]=useState([]);
   let [draw,drawset] = useState(false);
- 
+
   useEffect(()=>{
     let temp = localStorage.getItem('email');
     console.log(temp); 
@@ -32,7 +33,8 @@ function Stock_page(props){
     
     return (  
         <div>
-         {
+          <ChartViewer search = {props.search} searchbutton={props.searchbutton}></ChartViewer>
+           {
             draw ===true
             ?
             <LineChart
@@ -41,9 +43,7 @@ function Stock_page(props){
             data={chartdata}
             margin={{
               top: 50, right: 30, left: 20, bottom: 5,
-            }
-           
-          }
+            }}
           >
             <CartesianGrid strokeDasharray="20 20" />
             <XAxis dataKey="date" />

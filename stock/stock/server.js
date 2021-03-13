@@ -84,12 +84,29 @@ app.post('/login',(req,res)=>{
         })
 })
 
+app.post('/start',(req,res)=>{
+    var sql = `select name from stock;`
+    console.log(sql); 
+    connection.query(sql,
+    function (err,rows,fields){
+       if(err){
+           console.log("자동검색 실패");
+           return res.send(err);
+       }
+       else{  
+        console.log("자동검색 성공");
+        console.log(rows);
+         return res.send(rows);
+        }
+    })
+});
 
 app.post('/stock',(req,res)=>{
+    console.log(req.body);
     var body = qs.stringify(req.body);
     body = decodeURIComponent(body.slice(0,-1)); 
     var temp1 =`SELECT * FROM (select* from `;
-    var temp2 =`order by date desc limit 22) as a order by date asc`;
+    var temp2 =`order by date desc limit 300) as a order by date asc`;
     var sql = temp1.concat('`',body,'`',temp2); 
     console.log(sql); 
     connection.query(sql,
@@ -101,11 +118,10 @@ app.post('/stock',(req,res)=>{
        else{  
         console.log("종목 검색 성공");
         console.log(rows);
-        console.log(rows);
          return res.send(rows);
         }
     })
-})
+});
 
 //관심종목
 app.post('/interest',function(req,res){

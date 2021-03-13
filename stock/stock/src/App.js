@@ -10,11 +10,12 @@ let Service = lazy(()=>{return import('./components/Service.js')});
 let Interest = lazy(()=>{return import('./components/Interest.js')});
 let Login = lazy(()=>{return import('./components/Login.js')});
 let Portfolio = lazy(()=>{return import('./components/Portfolio.js')});
-// let Chart = lazy(()=>{return import('./components/Chart.js')});
-
+// let Cart = lazy(()=>{return import('./components/Cart.js')});
+// import AutocompletePage from './components/Autocomplete';
 //bootstrap
 //bootstrap
 import {Navbar,Nav,NavDropdown,Button,Form,FormControl,Jumbotron,Container,Row,Col,Carousel,Card,Image} from 'react-bootstrap';
+import '@devexpress/dx-react-chart-bootstrap4/dist/dx-react-chart-bootstrap4.css';
 //router
 //router
 import {Link,Switch,Route} from 'react-router-dom';
@@ -31,6 +32,8 @@ import Alarm from './image/Alarm.png';
 //data
 //data
 import Saying from './data/saying.js';
+import Krx from './data/krx.js';
+import axios from 'axios';
 
 //MainMainMain
 //MainMainMain
@@ -39,40 +42,48 @@ function App() {
   let [search,search_set] = useState("");
   let [searchbutton,searchbutton_set] = useState(0);
   let [id, idset] = useState("");
-
   useEffect(()=>{
     let temp = localStorage.getItem('email');
     console.log(temp); 
     idset(temp);
   },[])
 
+  useEffect(()=>{
+    // axios.post('/start')
+    // .then((res)=>{
+      
+    //   console.log("hi");
+    // })
+    // .catch(()=>{
+    //   console.log("주식 데이터 불러오기실패")
+    // });
+  },[])
+
   return (
+   
     <div className="App">
-      {
-        
-      }
       <Navnav id = {id} idset = {idset} search={search} search_set={search_set} searchbutton={searchbutton} searchbutton_set = {searchbutton_set}></Navnav>
       <Switch>
         <Route exact path = "/">
 
           <Main_page></Main_page>
         </Route>
-
+        
         <Route exact path="/service">
           <Suspense fallback = {<div>로딩중...</div>}>
             <Service></Service>
           </Suspense>
         </Route>
-        
+       
         <Route path="/stock">
           <Suspense fallback = {<div> 로딩중...</div>}>
-            <Stock_page search={search} searchbutton ={searchbutton} idset = {idset}></Stock_page>
+            <Stock_page search={search}  search_set={search_set} searchbutton ={searchbutton} searchbutton_set ={searchbutton_set} idset = {idset}></Stock_page>
           </Suspense>
         </Route>
 
         <Route path="/stock/:id">
           <Suspense fallback = {<div>로딩중...</div>}>
-            <Stock_page search={search} idset = {idset} searchbutton ={searchbutton}></Stock_page>
+            <Stock_page search={search} search_set={search_set} idset = {idset} searchbutton ={searchbutton} searchbutton_set ={searchbutton_set}></Stock_page>
           </Suspense>
         </Route>
 
@@ -100,6 +111,8 @@ function App() {
           </Suspense>
         </Route>
       </Switch>
+
+ 
     </div>
   );
 }
@@ -126,7 +139,6 @@ function Navnav(props){
             <Form inline>
               <FormControl type="text" placeholder="예) 삼성전자" className="mr-sm-2" onChange={(e)=>{props.search_set(e.target.value)}}/>
               <Link to={"/stock/" + props.search}> <Button variant="outline-success" onClick = {()=>{props.searchbutton_set(props.searchbutton+1)}}>Search</Button></Link>
-              
             </Form>
           </Navbar.Collapse>
         </Navbar>
@@ -149,11 +161,12 @@ function Navnav(props){
               </NavDropdown>
             </Nav>
             <Form inline>
-              <FormControl type="text" placeholder="예) 삼성전자" className="mr-sm-2" onChange={(e)=>{props.search_set(e.target.value)}}/>
+              <FormControl type="text" placeholder="예) 삼성전자" className="mr-sm-2"autoFocus autoComplete="on" required value={Krx.name}
+   onChange={(e)=>{props.search_set(e.target.value)}}/>
               <Link to={"/stock/" + props.search}> <Button variant="outline-success" onClick = {()=>{props.searchbutton_set(props.searchbutton+1)}}>Search</Button></Link>
-              
             </Form>
           </Navbar.Collapse>
+         
         </Navbar>
       }
     
@@ -173,8 +186,6 @@ function Navnav(props){
             })
           }
       </Carousel>
-            
-      
       </div>
   );
 }
