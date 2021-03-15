@@ -1,4 +1,4 @@
-# Juice 태블로 링크(in Tableau Public)
+# Juice
 
 ## <portfolio, interest, wordcloud> 대시보드
 
