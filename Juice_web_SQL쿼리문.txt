@@ -1,0 +1,70 @@
+웹페이지에서 버튼 클릭 시 사용되는 쿼리문 정리
+(@ : 버튼, # : 항목)
+
+#테이블명: Interest, portfolio, portfolio_target, stock(stock은 태블로에서만 사용) 
+##table 형태
+1. Interest
+  email / Stock(종목명)
+2. portfolio_target
+  seq(auto_increment) / email / name(종목명) / target(목표가) / memo_short(비고)
+3. portfolio
+  idx(auto_increment) / email / name(종목명) / date(날짜) / price(금액) / count(수량) / all_price(총금액) / choice(종류(매수,매도)) / memo(메모) 
+4. stock
+  name/code/date/close/trade(거래량)/news(기사량)/monthnews(한달 기사량)/fluc(등락)/ changepct(등락률)/keyword1~5/newslink/changepct2(등락률22시)
+
+
+#관심종목
+
+@추가
+insert into Interest(email, stock) values ('email', '종목명')
+
+@삭제
+delete from Interest where email='이메일' and stock='종목명'
+
+
+#포트폴리오
+
+@매수
+1) portfolio 추가
+insert into portfolio(email, name, date, price, count, all_price, choice, memo)
+values ('이메일', '종목명', '날짜', 매수가격, 수량, 매수가격*수량, '매수', '메모');
+ 
+2) portfolio_target 이메일,종목명 추가
+insert into portfolio_target(email, name)
+values ('이메일', '종목명')
+
+3) portfolio_target 이메일별 중복 종목 삭제
+delete n1
+from portfolio_target n1, portfolio_target n2 
+where n1.email='이메일*' and n1.seq > n2.seq and n1.name=n2.name
+
+@매도
+1) portfolio 추가(수량: -n)
+insert into portfolio(email, name, date, price, count, all_price, choice, memo)
+values ('이메일','종목명','날짜',매도가격,수량*(-1),매도가격*수량,'매도','메모');
+
+2) 현금화(입금)
+insert into portfolio(email, name, date, price, count, choice, memo)
+values ('이메일','현금','날짜',매도가격*수량,1,'입금','종목명');
+
+@입금
+insert into portfolio(email, name, date, price, count, choice, memo)  
+values ('이메일','현금','날짜',입금액수,1,'입금','메모');
+
+@출금
+insert into portfolio( email, name, date, price, count, choice, memo)  
+values ('이메일','현금','날짜',출금액수,-1,'출금','메모');
+
+@목표가/비고 관리
+update portfolio_target
+set target = 입력받은 값* and memo_short = 입력받은 값*
+where email=이메일* and name=선택종목* ;
+
+@수정(행 별)
+update portfolio
+set date='수정내용', price='수정내용', count='수정내용', memo='수정내용'
+where email=이메일 and name='행 종목' and idx='행 idx' ; 
+
+@삭제(행 별)
+delete from portfolio
+where email=이메일 and name='행 종목' and idx='행 idx' ;
