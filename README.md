@@ -1,4 +1,5 @@
-태블로(Tableau) 확인(in Tableau Public)
+Juice 태블로 링크(in Tableau Public)
+<portfolio, interest, wordcloud> 대시보드
 
 원본
 https://public.tableau.com/views/juice_16149437075470/portfolio?:language=ko&:display_count=y&:origin=viz_share_link
