@@ -302,7 +302,24 @@ app.post('/portfolio_delete',function(req,res){
     })
 
 });
+//목표가 삭제
 
+app.post('/portfolio_target_delete',function(req,res){
+   
+    var sql =`Delete from portfolio_target where seq =`+ req.body.seq+`;`;
+    connection.query(sql,function (err,rows,fields){
+       if(err){
+           console.log("목표가 삭제 실패");
+           return res.send(err);
+       }
+       else{  
+        console.log("목표가 삭제 성공");
+            console.log(rows);
+            return res.send(rows);
+        }
+    })
+
+});
 // 포트폴리오 수정
 app.post('/portfolio_modify',function(req,res){
     const name = req.body.name.name;
@@ -403,36 +420,30 @@ app.post('/portfolio_target',function(req,res){
 });
 
 
-// // 포트폴리오 타겟메모
-// app.post('/portfolio_target_memo',function(req,res){
-//     const name = req.body.name.name;
-//     const email = req.body.email.email;
-//     const target = req.body.target.target;
-//     const memo = req.body.memo.memo;
-//     console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
-//     var sql= `update portfolio_target
-//     set target = `+target+` and memo_short = '`+memo+`'
-//     where email='`+email+`' and name='`+name+`' ;`;
+app.post('/portfolio_target_modify',function(req,res){
+    const name = req.body.name.name;
+    const email = req.body.email.email;
+    const target = req.body.target.target;
+    const memo = req.body.memo.memo;
 
-//     var sql2 = `delete n1
-//     from portfolio_target n1, portfolio_target n2 
-//     where n1.email='`+email+`' and n1.seq > n2.seq and n1.name=n2.name`;
-//     console.log(sql);
-//     console.log(sql2);
-//     connection.query(sql + sql2,function (err,rows,fields){
-//        if(err){
-//            console.log("타겟메모 실패");
-//            return res.send(err);
-//        }
-//        else{  
-//             console.log(" 타겟메모 성공");
-//             console.log(rows);
-//             return res.send(rows);
-//         }
-//     })
+    var sql= `update portfolio_target set target = `+target+`, memo_short = '`+memo+`' where email='`+email+`' and name='`+name+`' ;`;
+
+    console.log(sql);
+    
+    connection.query(sql,function (err,rows,fields){
+       if(err){
+           console.log("타겟메모 실패");
+           return res.send(err);
+       }
+       else{  
+            console.log(" 타겟메모 성공");
+            console.log(rows);
+            return res.send(rows);
+        }
+    })
 
 
-// });
+});
 
 
 app.get('*',function(req,res){

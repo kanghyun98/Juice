@@ -13,6 +13,11 @@ function Portfolio(props){
         stockInfo: {},
      });
      
+     const [modal2State, setModal2State] = useState({
+      showModal: false,
+      stockInfo: {},
+   });
+
       const [sell, setsell] = useState({
       showModal: false,
       stockInfo: {},
@@ -53,13 +58,14 @@ function Portfolio(props){
       useEffect(()=>{
         axios.post('/portfolio_target', encodeURIComponent(props.id))
         .then((res)=>{
-              console.log("좋아 포트폴리오 데이터 받았어");
+              console.log("좋아 포트폴리오타겟 데이터 받았어");
               cart2set([...res.data]);
         })
         .catch((err)=>{
             console.log("다시 체크해주세요!");
         })
     },[add],[]);
+
         return (
             <div>
               <iframe src={URL} width="1500px" height="950px"></iframe>
@@ -93,7 +99,7 @@ function Portfolio(props){
                                   <tr>
                                     <td style = {{width : "200px", textAlign : "center"}}>{cart[i]?.name}</td>
                                     <td style = {{width : "200px", textAlign : "center"}}>{cart[i]?.date}</td>
-                                    <td style = {{width : "300px", textAlign : "center"}}>{cart[i]?.pricezzzzzzz} 원</td>
+                                    <td style = {{width : "300px", textAlign : "center"}}>{cart[i]?.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')} 원</td>
                                     <td style = {{width : "100px", textAlign : "center"}}>{cart[i]?.count}</td>
                                     <td style = {{width : "100px", textAlign : "center"}}>{cart[i]?.choice} </td>
                                     <td style = {{width : "300px", textAlign : "center"}}>{cart[i]?.all_price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')} 원</td>
@@ -160,19 +166,82 @@ function Portfolio(props){
                         })
                         }}
                         >매도</Button>  
-
-                        <Button style = {{width : "90px", textAlign : "center", alignContent :"right"}} variant="secondary" 
-                        onClick={()=>{
-                          settarget({
-                            stockInfo: "",
-                            showModal: true,
-                        })
-                        }}
-                        >목표가/비고관리</Button> 
-
                         <Sell sell={sell} setsell={setsell} id={props.id} addset={addset} add={add}></Sell>
                         <Buy buy={buy} setbuy={setbuy} id={props.id} addset={addset} add={add}></Buy>
                         <Cash cash={cash} setcash={setcash} id={props.id} addset={addset} add={add}></Cash>
+                      </Card.Body>
+                    </Accordion.Collapse>
+                  </Card> 
+                </Accordion>
+
+
+
+                
+                <Accordion>
+                  <Card>
+                    <Card.Header>
+                      <Accordion.Toggle as={Button} variant="link" eventKey="0">
+                        목표가/비고 관리하기
+                      </Accordion.Toggle>
+                    </Card.Header>
+                    <Accordion.Collapse eventKey="0">
+                      <Card.Body>
+                      <Table striped bordered hover variant="dark">
+                          <thead>
+                            <tr>
+                              <th style = {{width : "200px", textAlign : "center"}}>종목명</th>
+                              <th style = {{width : "200px", textAlign : "center"}}>목표가</th>
+                              <th style = {{width : "200px", textAlign : "center"}}>비고</th>
+                              <th style = {{width : "70px", textAlign : "center"}}>수정</th>
+                              <th style = {{width : "70px", textAlign : "center"}}>삭제</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {
+                              cart2.map(function(a,i){
+                                return (
+                                  <tr>
+                                    <td style = {{width : "200px", textAlign : "center"}}>{cart2[i]?.name}</td>
+                                    <td style = {{width : "200px", textAlign : "center"}}>{cart2[i]?.target}</td>
+                                    <td style = {{width : "200px", textAlign : "center"}}>{cart2[i]?.memo_short}</td>
+                                    
+                                    <td> <Button style = {{width : "70px", textAlign : "center"}} variant="secondary" 
+                                    onClick={() => {
+                                        setModal2State({
+                                            stockInfo: cart2[i],
+                                            showModal: true,
+                                        })
+                                    }}>
+                                    수정</Button></td>
+                                    
+                                    <td> <Button style = {{width : "70px", textAlign : "center"}} variant="secondary" onClick={()=>{
+                                        axios.post('/portfolio_target_delete',{seq : cart2[i]?.seq})
+                                        .then((res)=>{
+                                          console.log("목표가 삭제 성공")
+                                          addset(add+1);
+                                        })
+                                        .catch(()=>{
+                                          addset(add+1);
+                                          console.log("목표가 삭제 실패")
+                                        })
+                                    }}>삭제</Button></td>
+                                  </tr>
+                                )
+                              })
+                            }
+                            
+                          </tbody>
+                        </Table>
+                         {
+                           cart2.map(function(a,i){
+                             return (
+                               <div>
+                                   <Target modalState={modal2State} setModalState={setModal2State} id = {props.id} addset={addset} add={add}></Target>
+                               </div>
+                             )
+                           })
+                          }
+                       
                       </Card.Body>
                     </Accordion.Collapse>
                   </Card> 
@@ -183,6 +252,7 @@ function Portfolio(props){
             </div>
         )
 }
+
 //수정 버튼
 function Modify(props) {
   const name=props.modalState.stockInfo.name;
@@ -532,5 +602,76 @@ function Cash(props){
     </>
   )
 }
+
+
+
+//목표가 비고 관리
+//수정 버튼
+function Target(props) {
+  const name=props.modalState.stockInfo.name;
+  const [memo, setmemo] = useState("");
+  const [target, settarget] = useState();
+  const email = props.id;
+  return (
+    <>
+      <Modal show={props.modalState.showModal} size = "xl" animation={true}>
+          <Modal.Header closeButton>
+            <Modal.Title> 목표가/비고 수정</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+              <Table striped bordered hover variant="dark">
+                <thead>
+                  <tr>
+                    <th style = {{width : "200px", textAlign : "center"}}>종목명</th>
+                    <th style = {{width : "200px", textAlign : "center"}}>목표가</th>
+                    <th style = {{width : "200px", textAlign : "center"}}>비고</th>
+                  </tr>
+               
+                </thead>
+                <tbody>
+                      <td style = {{width : "200px", textAlign : "center"}}>{name} </td> 
+                      <td>
+                        <input type="text" className="form-control" onChange={(e) => settarget(e.target.value)}/>
+                      </td>
+                      <td>
+                        <input type="text" className="form-control" onChange={(e) => setmemo(e.target.value)}/>
+                      </td>
+                </tbody>  
+              </Table>
+          </Modal.Body>
+
+          <Modal.Footer>
+            <Button variant="secondary" onClick={()=>{
+              props.setModalState({
+                stockInfo: "",
+                showModal : false
+            })
+            }}>
+              닫기
+            </Button>
+            <Button variant="primary" onClick ={()=>{
+              props.setModalState({
+              stockInfo: "",
+               showModal : false,
+              });
+
+              axios.post('/portfolio_target_modify',{ email : {email}, memo : {memo}, name : {name}, target : {target} } )
+              .then((res)=>{
+                console.log("목표가 수정 성공");
+                props.addset(props.add+1);
+              })
+              .catch((err)=>{
+                console.log("목표가 수정 실패");
+                props.addset(props.add+1);
+              })
+            }}>
+              저장하기
+            </Button>
+          </Modal.Footer>
+        </Modal>  
+    </>
+  );
+}
+
 
 export default Portfolio;
