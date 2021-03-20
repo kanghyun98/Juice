@@ -6,6 +6,8 @@ import {Form,FormControl,Button,Modal,Table,Card,Accordion} from 'react-bootstra
 function Portfolio(props){
   let [URL,URLset] = useState("https://public.tableau.com/views/juice_16149437075470/portfolio?:language=en&:display_count=y&:origin=viz_share_link:showVizHome=no&:embed=true&Email="+props.id);
   let [cart, cartset] = useState([]);
+  let [cart2, cart2set] = useState([]);
+  let [add,addset] = useState("");
       const [modalState, setModalState] = useState({
         showModal: false,
         stockInfo: {},
@@ -26,6 +28,11 @@ function Portfolio(props){
         stockInfo: {},
       });
 
+      const [target, settarget] = useState({
+        showModal: false,
+        stockInfo: {},
+      });
+
         useEffect(()=>{
           let temp = localStorage.getItem('email');
           console.log(temp); 
@@ -41,11 +48,20 @@ function Portfolio(props){
           .catch((err)=>{
               console.log("다시 체크해주세요!");
           })
-      },[]);
-
+      },[add],[]);
+      
+      useEffect(()=>{
+        axios.post('/portfolio_target', encodeURIComponent(props.id))
+        .then((res)=>{
+              console.log("좋아 포트폴리오 데이터 받았어");
+              cart2set([...res.data]);
+        })
+        .catch((err)=>{
+            console.log("다시 체크해주세요!");
+        })
+    },[add],[]);
         return (
             <div>
-              {URL}
               <iframe src={URL} width="1500px" height="950px"></iframe>
                <Accordion>
                   <Card>
@@ -77,8 +93,8 @@ function Portfolio(props){
                                   <tr>
                                     <td style = {{width : "200px", textAlign : "center"}}>{cart[i]?.name}</td>
                                     <td style = {{width : "200px", textAlign : "center"}}>{cart[i]?.date}</td>
-                                    <td style = {{width : "300px", textAlign : "center"}}>{cart[i]?.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')} 원</td>
-                                    <td style = {{width : "100px", textAlign : "center"}}>{cart[i]?.count} 주</td>
+                                    <td style = {{width : "300px", textAlign : "center"}}>{cart[i]?.pricezzzzzzz} 원</td>
+                                    <td style = {{width : "100px", textAlign : "center"}}>{cart[i]?.count}</td>
                                     <td style = {{width : "100px", textAlign : "center"}}>{cart[i]?.choice} </td>
                                     <td style = {{width : "300px", textAlign : "center"}}>{cart[i]?.all_price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')} 원</td>
                                     <td style = {{width : "300px", textAlign : "center"}}>{cart[i]?.memo}</td>
@@ -97,8 +113,10 @@ function Portfolio(props){
                                         axios.post('/portfolio_delete',cart[i]?.idx)
                                         .then((res)=>{
                                           console.log("포트폴리오 삭제 성공")
+                                          addset(add+1);
                                         })
                                         .catch(()=>{
+                                          addset(add+1);
                                           console.log("포트폴리오 삭제 실패")
                                         })
                                     }}>삭제</Button></td>
@@ -113,7 +131,7 @@ function Portfolio(props){
                            cart.map(function(a,i){
                              return (
                                <div>
-                                   <Modify modalState={modalState} setModalState={setModalState} id = {props.id}></Modify>
+                                   <Modify modalState={modalState} setModalState={setModalState} id = {props.id} addset={addset} add={add}></Modify>
                                </div>
                              )
                            })
@@ -142,9 +160,19 @@ function Portfolio(props){
                         })
                         }}
                         >매도</Button>  
-                        <Sell sell={sell} setsell={setsell} id={props.id}></Sell>
-                        <Buy buy={buy} setbuy={setbuy} id={props.id}></Buy>
-                        <Cash cash={cash} setcash={setcash} id={props.id}></Cash>
+
+                        <Button style = {{width : "90px", textAlign : "center", alignContent :"right"}} variant="secondary" 
+                        onClick={()=>{
+                          settarget({
+                            stockInfo: "",
+                            showModal: true,
+                        })
+                        }}
+                        >목표가/비고관리</Button> 
+
+                        <Sell sell={sell} setsell={setsell} id={props.id} addset={addset} add={add}></Sell>
+                        <Buy buy={buy} setbuy={setbuy} id={props.id} addset={addset} add={add}></Buy>
+                        <Cash cash={cash} setcash={setcash} id={props.id} addset={addset} add={add}></Cash>
                       </Card.Body>
                     </Accordion.Collapse>
                   </Card> 
@@ -185,21 +213,20 @@ function Modify(props) {
                
                 </thead>
                 <tbody>
-                
-
+                {/* value = {props.modalState.stockInfo.date}  */}
                       <td style = {{width : "200px", textAlign : "center"}}>{name} </td> 
                       <td>
-                        <input type="date" className="form-control" value = {props.modalState.stockInfo.date} onChange={(e) => setdate(e.target.value)}/>
+                        <input type="date" className="form-control" onChange={(e) => setdate(e.target.value)}/>
                       </td>
                       <td>
-                        <input type="price" className="form-control" value= {props.modalState.stockInfo.price} onChange={(e) => setprice(e.target.value)}/>
+                        <input type="price" className="form-control"onChange={(e) => setprice(e.target.value)}/>
                       </td>
                       <td>
-                        <input type="number" className="form-control" value= {Math.abs(props.modalState.stockInfo.count)} onChange={(e) => setcount(e.target.value)}/>
+                        <input type="number" className="form-control"onChange={(e) => setcount(e.target.value)}/>
                       </td>
                       <td style = {{width : "200px", textAlign : "center"}}>{props.modalState.stockInfo.choice} </td>
                       <td>
-                        <input type="text" className="form-control" value= {props.modalState.stockInfo.memo} onChange={(e) => setmemo(e.target.value)}/>
+                        <input type="text" className="form-control" onChange={(e) => setmemo(e.target.value)}/>
                       </td>
                 </tbody>  
               </Table>
@@ -221,11 +248,13 @@ function Modify(props) {
               });
 
               axios.post('/portfolio_modify',{email : {email}, price : {price}, date : {date}, count : {count}, memo : {memo}, name : {name}, choice :{choice}, idx:{idx} } )
-              .then(()=>{
+              .then((res)=>{
                 console.log("포트폴리오 수정 성공");
+                props.addset(props.add+1);
               })
-              .catch(()=>{
+              .catch((err)=>{
                 console.log("포트폴리오 수정 실패");
+                props.addset(props.add+1);
               })
             }}>
               저장하기
@@ -307,10 +336,12 @@ function Sell(props){
                   showModal : false,
                   })
                   axios.post('/portfolio_sell',{name : {name}, date : {date}, price : {price}, count : {count}, memo : {memo}, email:{email}})
-                  .then(()=>{
+                  .then((res)=>{
+                    props.addset(props.add+1);
                     console.log("매도 추가 성공")
                   })
-                  .catch(()=>{
+                  .catch((err)=>{
+                    props.addset(props.add+1);
                     console.log("매도 추가 실패")
                   })
                 }}>
@@ -394,10 +425,12 @@ function Buy(props){
                 showModal : false,
                 })
                 axios.post('/portfolio_buy',{name : {name}, date : {date}, price : {price}, count : {count}, memo : {memo}, email:{email}})
-                .then(()=>{
+                .then((res)=>{
+                  props.addset(props.add+1);
                   console.log("매수 추가 성공")
                 })
-                .catch(()=>{
+                .catch((err)=>{
+                  props.addset(props.add+1);
                   console.log("매수 추가 실패")
                 })
               }}>
@@ -429,7 +462,6 @@ function Cash(props){
                 <Table striped bordered hover variant="dark">
                   <thead>
                     <tr>
-               
                       <th style = {{width : "200px", textAlign : "center"}}>날짜</th>
                       <th style = {{width : "300px", textAlign : "center"}}>금액</th>
                       <th style = {{width : "300px", textAlign : "center"}}>메모</th>
@@ -454,12 +486,12 @@ function Cash(props){
                   stockInfo: "",
                   showModal : false
               });
-                  axios.post('/portfolio_put',{email:{email}, name:{name}, date:{date}, price:{price},memo:{memo}})
+                  axios.post('/portfolio_put',{email:{email}, date:{date}, price:{price} ,memo:{memo} })
                   .then(()=>{ 
-
+                    props.addset(props.add+1);
                   })
                   .catch(()=>{
-
+                    props.addset(props.add+1);
                   });
 
               }}>
@@ -472,11 +504,11 @@ function Cash(props){
                   showModal : false
               });
                 axios.post('/portfolio_pull',{email:{email}, name:{name}, date:{date}, price:{price},memo:{memo}})
-                .then(()=>{ 
-
+                .then((res)=>{ 
+                  props.addset(props.add+1);
                 })
-                .catch(()=>{  
-
+                .catch((err)=>{  
+                  props.addset(props.add+1);
                 });
               }}>
                 출금
@@ -500,4 +532,5 @@ function Cash(props){
     </>
   )
 }
+
 export default Portfolio;

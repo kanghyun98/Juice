@@ -13,7 +13,8 @@ const connection = mysql.createConnection({
     user : conf.user, //mysql의 id
     password : conf.password, //mysql의 password
     database : conf.database, //사용할 데이터베이스 
-    port : conf.port
+    port : conf.port,
+    multipleStatements: true
 });
 connection.connect();
  const qs = require('qs');
@@ -84,7 +85,7 @@ app.post('/login',(req,res)=>{
         })
 })
 
-app.post('/start',(req,res)=>{
+app.get('/start',(req,res)=>{
     var sql = `select name from stock;`
     console.log(sql); 
     connection.query(sql,
@@ -100,13 +101,13 @@ app.post('/start',(req,res)=>{
         }
     })
 });
-
-app.post('/stock',(req,res)=>{
+//한달치 주식차트
+app.post('/stock_month',(req,res)=>{
     console.log(req.body);
     var body = qs.stringify(req.body);
     body = decodeURIComponent(body.slice(0,-1)); 
-    var temp1 =`SELECT * FROM (select* from `;
-    var temp2 =`order by date desc limit 300) as a order by date asc`;
+    var temp1 =`SELECT date, changepct, news FROM (select* from `;
+    var temp2 =`order by date desc limit 20) as a order by date asc`;
     var sql = temp1.concat('`',body,'`',temp2); 
     console.log(sql); 
     connection.query(sql,
@@ -123,6 +124,29 @@ app.post('/stock',(req,res)=>{
     })
 });
 
+
+//일년치 주식차트
+app.post('/stock_year',(req,res)=>{
+    console.log(req.body);
+    var body = qs.stringify(req.body);
+    body = decodeURIComponent(body.slice(0,-1)); 
+    var temp1 =`SELECT date,changepct,news FROM (select* from `;
+    var temp2 =`order by date desc limit 70) as a order by date asc`;
+    var sql = temp1.concat('`',body,'`',temp2); 
+    console.log(sql); 
+    connection.query(sql,
+    function (err,rows,fields){
+       if(err){
+           console.log("종목 검색 실패");
+           return res.send( err);
+       }
+       else{  
+        console.log("종목 검색 성공");
+        console.log(rows);
+         return res.send(rows);
+        }
+    })
+});
 //관심종목
 app.post('/interest',function(req,res){
     var body = qs.stringify(req.body);
@@ -147,6 +171,7 @@ app.post('/interest_delete',function(req,res){
     body = decodeURIComponent(body.slice(0,-1)); 
     var sql =`Delete from Interest where stock = ` + `'` + body+`';`;
     console.log(sql); 
+
     connection.query(sql,
     function (err,rows,fields){
        if(err){
@@ -158,7 +183,8 @@ app.post('/interest_delete',function(req,res){
             console.log(rows);
             return res.send(rows);
         }
-    })
+    });
+    
 });
 
 //관심종목 추가
@@ -237,33 +263,22 @@ app.post('/portfolio_buy',function(req,res){
 
     const sql = `INSERT INTO portfolio (email, name, date, price, count, all_price, choice, memo)
      VALUES(`+`'`+email+`'`+`,`+`'`+name+`'`+`,`+`'`+date+`',`+price+`,`+count+`,`+price*count+`,'`+"매수"+`'`+`,'`+memo+`');`;
+    const sql2 = `insert into portfolio_target(email, name) values ('`+email+`', '`+ name +`');`;
+    const sql3 = `delete n1
+    from portfolio_target n1, portfolio_target n2 
+    where n1.email='`+email+`' and n1.seq > n2.seq and n1.name=n2.name;`;
 
-     connection.query(sql,function (err,rows,fields){
+     connection.query(sql +sql2 +sql3,function (err,rows,fields){
        if(err){
-           console.log("포트폴리오 매도 실패");
+           console.log("포트폴리오 매수 실패");
            return res.send(err);
        }
        else{  
-            console.log("포트폴리오 매도 성공");
+            console.log("포트폴리오 매수 성공");
             console.log(rows);
             return res.send(rows);
         }
     })
-    // const sql2=`insert into portfolio_target(email,name) values('`+email+`', '`+name+ `')`;
-
-    // connection.query(sql2,function (err,rows,fields){
-    //     if(err){
-    //         console.log("포트폴리오 매도 실패");
-    //         return res.send(err);
-    //     }
-    //     else{  
-    //          console.log("포트폴리오 매도 성공");
-    //          console.log(rows);
-    //          return res.send(rows);
-    //      }
-    //  })
- 
-
 });
 
 //포트폴리오 삭제
@@ -286,19 +301,6 @@ app.post('/portfolio_delete',function(req,res){
         }
     })
 
-    // var sql2 =`Delete from portfolio_target where email = ` + `'` + body+`'` +`and stock = ` +`'`+ stock+`';` ;
-    // console.log(sql2);
-    // connection.query(sql2,function (err,rows,fields){
-    //    if(err){
-    //        console.log("포트폴리오 삭제 실패");
-    //        return res.send(err);
-    //    }
-    //    else{  
-    //     console.log("포트폴리오 삭제 성공");
-    //         console.log(rows);
-    //         return res.send(rows);
-    //     }
-    // })
 });
 
 // 포트폴리오 수정
@@ -342,9 +344,8 @@ app.post('/portfolio_put',function(req,res){
     const date = req.body.date.date;
     const price = req.body.price.price;
     const memo = req.body.memo.memo;
-    var sql = `insert into portfolio (email,name,date,price,count,choice,memo,all_price) VALUES ('`
-    +email+ `','현금','`+date+`',`+price+`,1,'입금','`+memo+`',0);`
-    console.log(sql);
+    var sql = `insert into portfolio (email,name,date,price,count,choice,memo, all_price) VALUES ('`
+    +email+ `','현금','`+date+`',`+price+`,1,'출금','`+memo+`',`+ price+`);`
     connection.query(sql,function (err,rows,fields){
        if(err){
            console.log("포트폴리오  입금 실패");
@@ -364,9 +365,8 @@ app.post('/portfolio_pull',function(req,res){
     const date = req.body.date.date;
     const price = req.body.price.price;
     const memo = req.body.memo.memo;
-    var sql = `insert into portfolio (email,name,date,price,count,choice,memo,all_price) VALUES ('`
-    +email+ `','현금','`+date+`',`+price+`,-1,'출금','`+memo+`',0);`
-    console.log(sql);
+    var sql = `insert into portfolio (email,name,date,price,count,choice,memo, all_price) VALUES ('`
+    +email+ `','현금','`+date+`',`+price+`,-1,'출금','`+memo+`',`+ price*-1+`);`
     connection.query(sql,function (err,rows,fields){
        if(err){
            console.log("포트폴리오  입금 실패");
@@ -379,6 +379,62 @@ app.post('/portfolio_pull',function(req,res){
         }
     })
 });
+
+
+// 포트폴리오 타겟
+app.post('/portfolio_target',function(req,res){
+    var body = qs.stringify(req.body);
+    body = decodeURIComponent(body.slice(0,-1)); 
+
+    var sql =`SELECT * FROM portfolio_target where email =`+`'`+ body+`';`;
+
+    console.log(sql); 
+    connection.query(sql,function (err,rows,fields){
+       if(err){
+           console.log("타겟가져오기 실패");
+           return res.send(err);
+       }
+       else{  
+            console.log("타겟가져오기 성공");
+            console.log(rows);
+            return res.send(rows);
+        }
+    })
+});
+
+
+// // 포트폴리오 타겟메모
+// app.post('/portfolio_target_memo',function(req,res){
+//     const name = req.body.name.name;
+//     const email = req.body.email.email;
+//     const target = req.body.target.target;
+//     const memo = req.body.memo.memo;
+//     console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+//     var sql= `update portfolio_target
+//     set target = `+target+` and memo_short = '`+memo+`'
+//     where email='`+email+`' and name='`+name+`' ;`;
+
+//     var sql2 = `delete n1
+//     from portfolio_target n1, portfolio_target n2 
+//     where n1.email='`+email+`' and n1.seq > n2.seq and n1.name=n2.name`;
+//     console.log(sql);
+//     console.log(sql2);
+//     connection.query(sql + sql2,function (err,rows,fields){
+//        if(err){
+//            console.log("타겟메모 실패");
+//            return res.send(err);
+//        }
+//        else{  
+//             console.log(" 타겟메모 성공");
+//             console.log(rows);
+//             return res.send(rows);
+//         }
+//     })
+
+
+// });
+
+
 app.get('*',function(req,res){
     res.sendFile(path.join(__dirname, '/build/index.html'));
 });

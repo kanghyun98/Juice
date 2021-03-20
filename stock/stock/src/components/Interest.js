@@ -19,20 +19,19 @@ function Interest(props){
           console.log("좋아 관심종목 데이터 받았어");
             res.data.map(function(a,i){
                 URLset(URL=>URL+res.data[i].stock+",");
-                cartset([...cart,...res.data]);
+                cartset([...res.data]);
               })
         })
         .catch((err)=>{
             console.log("다시 체크해주세요!");
         })
-    },[],[add]);
+    },[add],[]);
 
     return (
         <div>
-          {URL}
             <iframe src={URL} width="100%" height="950px"></iframe>
             <br/>
-            <Add_Button id = {props.id} cart = {cart} add={add} addset={addset}></Add_Button>
+            <Add_Button id = {props.id} cart = {cart} cartset = {cartset} add={add} addset={addset}></Add_Button>
             <br/>
             <br/>
             <br/>
@@ -50,7 +49,7 @@ function Add_Button(props) {
             관심종목 관리
         </Button>
   
-        <Modal show={show} onHide={handleClose} size = "xl" animation={true}>
+        <Modal show={show} onHide={handleClose} size = "l" animation={true}>
           <Modal.Header closeButton>
             <Modal.Title>{props.id} 님의 종목 관리</Modal.Title>
           </Modal.Header>
@@ -72,9 +71,11 @@ function Add_Button(props) {
                               <td style = {{width : "100px", textAlign : "center"}}> <Button variant="secondary" onClick={()=>{
                                 axios.post('/interest_delete',props.cart[i]?.stock)
                                 .then((res)=>{
+                                  props.addset(props.add+1);
                                   console.log("삭제성공")
                                 })
                                 .catch(()=>{
+                                  props.addset(props.add+1);
                                   console.log("삭제실패")
                                 })
                               }}> 삭제 </Button></td>
@@ -91,9 +92,11 @@ function Add_Button(props) {
                   <Button variant="outline-success" onClick = {()=>{
                     axios.post('/interest_add',{email : props.id, stock : encodeURIComponent(props.add)})
                     .then((res)=>{
-                      console.log("관심종목 추가 성공")
+                      props.addset(props.add+1);
+                      console.log("관심종목 추가 성공");
                     })
                     .catch((err)=>{
+                      props.addset(props.add+1);  
                       console.log("관심종목 추가 실패")
                     })
                   }}>관심종목 추가</Button>

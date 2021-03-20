@@ -1,15 +1,24 @@
 import React from 'react';
 import Autosuggest from 'react-autosuggest';
 import axios from 'axios';
+import {Button, Form,FormControl} from 'react-bootstrap';
+
 // Imagine you have a list of languages that you'd like to autosuggest.
-
-
 const languages = [
   {
-    name: 'C',
+    name: '삼성전자',
   },
   {
-    name: 'Elm',
+    name: '삼성전기',
+  },
+  {
+    name: '삼성전자우',
+  },
+  {
+    name: '코나아이',
+  },
+  {
+    name: 'CSA 코스믹',
   },
 ];
 
@@ -76,21 +85,24 @@ class Example extends React.Component {
 
     // Autosuggest will pass through all these props to the input.
     const inputProps = {
-      placeholder: 'Type a programming language',
+      placeholder: '  종목명 검색해보세요',
       value,
       onChange: this.onChange
     };
 
     // Finally, render it!
     return (
-      <Autosuggest
-        suggestions={suggestions}
-        onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
-        onSuggestionsClearRequested={this.onSuggestionsClearRequested}
-        getSuggestionValue={getSuggestionValue}
-        renderSuggestion={renderSuggestion}
-        inputProps={inputProps}
-      />
+     <div>
+        <Autosuggest 
+            suggestions={suggestions}
+            onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
+            onSuggestionsClearRequested={this.onSuggestionsClearRequested}
+            getSuggestionValue={getSuggestionValue}
+            renderSuggestion={renderSuggestion}
+            inputProps={inputProps}
+        />
+      {/* <Button variant="outline-success">검색</Button> */}
+     </div>
     );
   }
 }
