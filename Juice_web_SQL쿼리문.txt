@@ -47,19 +47,6 @@ values ('이메일','종목명','날짜',매도가격,수량*(-1),매도가격*�
 insert into portfolio(email, name, date, price, count, choice, memo)
 values ('이메일','현금','날짜',매도가격*수량,1,'입금','종목명');
 
-@입금
-insert into portfolio(email, name, date, price, count, choice, memo)  
-values ('이메일','현금','날짜',입금액수,1,'입금','메모');
-
-@출금
-insert into portfolio( email, name, date, price, count, choice, memo)  
-values ('이메일','현금','날짜',출금액수,-1,'출금','메모');
-
-@목표가/비고 관리
-update portfolio_target
-set target = 입력받은 값* and memo_short = 입력받은 값*
-where email=이메일* and name=선택종목* ;
-
 @수정(행 별)
 update portfolio
 set date='수정내용', price='수정내용', count='수정내용', memo='수정내용'
@@ -68,3 +55,20 @@ where email=이메일 and name='행 종목' and idx='행 idx' ;
 @삭제(행 별)
 delete from portfolio
 where email=이메일 and name='행 종목' and idx='행 idx' ;
+
+@입금
+insert into portfolio(email, name, date, price, count, choice, memo)  
+values ('이메일','현금','날짜',입금액수,1,'입금','메모');
+
+@출금
+insert into portfolio( email, name, date, price, count, choice, memo)  
+values ('이메일','현금','날짜',출금액수,-1,'출금','메모');
+
+@수정 (목표가/비고)
+update portfolio_target
+set target = 입력받은 값* and memo_short = 입력받은 값*
+where email=이메일 and name=선택종목 ;
+
+@삭제 (목표가/비고)
+delete from portfolio_target
+where email=이메일 and name='선택종목'
