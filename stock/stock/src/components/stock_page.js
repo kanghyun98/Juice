@@ -1,5 +1,5 @@
 /*eslint-disable*/
-import React,{useState,useEffect} from 'react';
+import React,{useState,useEffect,PureComponent} from 'react';
 import {useHistory, useParams } from 'react-router-dom';
 import axios from 'axios';
 import {
@@ -27,8 +27,7 @@ function Stock_page(props){
     .then((res)=>{
         chartdataset([...res.data])
         drawset(true);
-        titleset(true);
-        window.global = res.data;
+        titleset(true); 
     })
     .catch((err)=>{
         console.log("회사 정보가 없어요. 다시 체크해주세요!");
@@ -40,7 +39,7 @@ function Stock_page(props){
   useEffect(()=>{
     axios.post('/stock_year', encodeURIComponent(props.search))
     .then((res)=>{
-        chartdata2set([...res.data]) 
+        chartdata2set([...res.data]);
         titleset(true);
         drawset(true);
     })
@@ -55,7 +54,7 @@ function Stock_page(props){
     return (  
         <div>
           <br/><br/><br/>
-          <Chart2></Chart2>
+          {/* <Chart2></Chart2> */}
             {/* <Chartmonth search={props.search} searchbutton = {props.searchbutton}></Chartmonth> */}
             {
               title === true
@@ -86,8 +85,8 @@ function Stock_page(props){
               <YAxis yAxisId="right" orientation="right" /> 
               <Tooltip /> 
               <Legend />
-              <Line yAxisId="left" type="monotone" dataKey="changepct" stroke="#FF0000" dot ={false}  activeDot={{ r: 8 }} />
-              <Line yAxisId="right" type="monotone" dataKey="news" stroke="#00D8FF" dot ={false}  activeDot={{ r: 8 }} />
+              <Line yAxisId="left" type="monotone" dataKey="changepct" stroke="#FF0000" dot ={false}  activeDot={{ r: 8 }} animationDuration={2000}/>
+              <Line yAxisId="right" type="monotone" dataKey="news" stroke="#00D8FF" dot ={false}  activeDot={{ r: 8 }} animationDuration={2000}/>
           </LineChart>
         </ResponsiveContainer>
         :<div>
@@ -124,14 +123,14 @@ function Stock_page(props){
               <YAxis yAxisId="right" orientation="right" /> 
               <Tooltip /> 
               <Legend />
-              <Line yAxisId="left" type="monotone" dataKey="changepct" stroke="#FF0000" dot ={false}  activeDot={{ r: 8 }} />
-              <Line yAxisId="right" type="monotone" dataKey="news" stroke="#00D8FF" dot ={false}  activeDot={{ r: 8 }} />
+              <Line yAxisId="left" type="monotone" dataKey="changepct" stroke="#FF0000" dot ={false}  activeDot={{ r: 8 }} animationDuration={1000}/>
+              <Line yAxisId="right" type="monotone" dataKey="news" stroke="#00D8FF" dot ={false}  activeDot={{ r: 8 }} animationDuration={1000}/>
           </LineChart>
         </ResponsiveContainer>
             :null
           }
             {/* <Chartyear search={props.search} searchbutton = {props.searchbutton}></Chartyear> */}
-          {draw===true?<Chart chartdata={chartdata}></Chart>: null}
+          {/* {draw===true?<Chart chartdata={chartdata2} searchbutton = {props.searchbutton} search={props.search}></Chart>: null} */}
           <br/><br/><br/><br/>
           {draw===true?<Button onClick = {()=>{}} variant="warning" style = {{color : "white"}}>관심종목에 넣기</Button>: null}
           <br/><br/><br/><br/>

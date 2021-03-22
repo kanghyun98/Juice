@@ -202,9 +202,16 @@ function Portfolio(props){
                                 return (
                                   <tr>
                                     <td style = {{width : "200px", textAlign : "center"}}>{cart2[i]?.name}</td>
-                                    <td style = {{width : "200px", textAlign : "center"}}>{cart2[i]?.target}</td>
-                                    <td style = {{width : "200px", textAlign : "center"}}>{cart2[i]?.memo_short}</td>
-                                    
+                                    {
+                                      cart2[i].target!==null
+                                    ?<td style = {{width : "200px", textAlign : "center"}}>{cart2[i]?.target.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')} 원</td>
+                                    : <td style = {{width : "200px", textAlign : "center"}}> 목표가 설정해주세요.</td>
+                                    }
+                                    {
+                                      cart2[i].memo_short!==null
+                                    ?<td style = {{width : "200px", textAlign : "center"}}>{cart2[i]?.memo_short}</td>
+                                    : <td style = {{width : "200px", textAlign : "center"}}> -</td>
+                                    }
                                     <td> <Button style = {{width : "70px", textAlign : "center"}} variant="secondary" 
                                     onClick={() => {
                                         setModal2State({

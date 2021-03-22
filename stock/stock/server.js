@@ -131,7 +131,7 @@ app.post('/stock_year',(req,res)=>{
     var body = qs.stringify(req.body);
     body = decodeURIComponent(body.slice(0,-1)); 
     var temp1 =`SELECT date,changepct,news FROM (select* from `;
-    var temp2 =`order by date desc limit 70) as a order by date asc`;
+    var temp2 =`order by date desc limit 300) as a order by date asc`;
     var sql = temp1.concat('`',body,'`',temp2); 
     console.log(sql); 
     connection.query(sql,

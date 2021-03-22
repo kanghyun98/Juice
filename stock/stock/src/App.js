@@ -126,7 +126,7 @@ function Navnav(props){
         props.id===""||props.id===null
         ?
         <Navbar className = "Navbar1" expand="lg">
-          <Navbar.Brand><Link to="">Stock Alarm</Link></Navbar.Brand>
+          <Navbar.Brand><Link to="">Juice</Link></Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="ml-auto">
@@ -134,7 +134,7 @@ function Navnav(props){
               <Nav.Link><Link to="/stock">주식종목</Link></Nav.Link>
               <Nav.Link><Link to="/login">로그인</Link></Nav.Link>
             </Nav>
-            <Form inline>
+            <Form inline >
               <FormControl type="text" placeholder="예) 삼성전자" className="mr-sm-2" onChange={(e)=>{props.search_set(e.target.value)}}/>
               <Link to={"/stock/" + props.search}> <Button variant="outline-success" onClick = {()=>{props.searchbutton_set(props.searchbutton+1)}}>검색</Button></Link>
             </Form>
@@ -142,7 +142,7 @@ function Navnav(props){
         </Navbar>
         :
         <Navbar className = "Navbar1" expand="lg">
-          <Navbar.Brand><Link to="">Stock Alarm</Link></Navbar.Brand>
+          <Navbar.Brand><Link to="">Juice</Link></Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="ml-auto">
@@ -200,7 +200,7 @@ function Main_page(){
             <br></br><br></br>
             <p>
               학업, 직장으로 인해 주식에 집중하실 수 없으신가요?
-              <p>Stock Alarm에서 주가와 기사량 변동에 관한 데이터를 알려드립니다.</p>
+              <p>Juice에서 주가와 기사량 변동에 관한 데이터를 알려드립니다.</p>
               부담없이 신청하세요.
             </p>
             <p>
@@ -211,7 +211,7 @@ function Main_page(){
 
 
 
-          <Jumbotron style={{backgroundColor : "black", color : "white"}}>
+          <Jumbotron style={{backgroundColor : "#FCEDDA", color : "white"}}>
             <h1>워드클라우드</h1>
             <iframe src={URL} width="90%" height="950px"></iframe>
           </Jumbotron>
