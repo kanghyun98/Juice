@@ -1,4 +1,4 @@
-import React, { PureComponent,useState,useEffect} from 'react';
+import React, { PureComponent } from 'react';
 import {
   Label,
   LineChart,
@@ -10,90 +10,104 @@ import {
   ReferenceArea,
   ResponsiveContainer,
 } from 'recharts';
+import axios from 'axios';
+import { RESERVED_EVENTS } from 'socket.io/dist/socket';
 
-
-export default function Example (props){
-
-  let  [initialData,setinitialData] = useState([...props.chartdata
-  ]);
+export default class Example extends PureComponent {
+  // static initialData =[];
+  constructor(props) {
+    super(props);
+    this.state = {
+      data: '',
+      left: 'dataMin',
+      right: 'dataMax',
+      refAreaLeft: '',
+      refAreaRight: '',
+      top: 'dataMax+1',
+      bottom: 'dataMin-1',
+      top2: 'dataMax+20',
+      bottom2: 'dataMin-20',
+      animation: true,
+    };
+  }
   
-  let [initialState,setinitialState] = useState({
-    data: initialData,
-    left: 'dataMin',
-    right: 'dataMax',
-    refAreaLeft: '',
-    refAreaRight: '',
-    top: 'dataMax+1',
-    bottom: 'dataMin-1',
-    top2: 'dataMax+20',
-    bottom2: 'dataMin-20',
-    animation: true,
-  });
-
-  // useEffect(()=>{
-  //   setinitialData([...props.chartdata])
-  // },[]);
-  
-
-  function getAxisYDomain (from, to, ref, offset) {
-    const refData = initialData.slice(from - 1, to);
+   getAxisYDomain = (from, to, ref, offset) => {
+    let temp = this.state.data.slice();
+    let refData =temp.slice(from-1, to);
     let [bottom, top] = [refData[0][ref], refData[0][ref]];
     refData.forEach((d) => {
       if (d[ref] > top) top = d[ref];
       if (d[ref] < bottom) bottom = d[ref];
     });
-  
     return [(bottom | 0) - offset, (top | 0) + offset];
   };
 
+  componentWillMount(props){
+    axios.post('/stock_year', encodeURIComponent(this.props.search))
+    .then((res)=>{
+      this.setState({data : [...res.data]});
+    })
+    .catch((err)=>{
+        console.log("회사 정보가 없어요. 다시 체크해주세요!");
+    })
+    console.log("willmount");
+  }
+  
+  componentDidMount(props){
+    axios.post('/stock_year', encodeURIComponent(this.props.search))
+    .then((res)=>{
+      this.setState({data : [...res.data]});
+    })
+    .catch((err)=>{
+        console.log("회사 정보가 없어요. 다시 체크해주세요!");
+    })
+    console.log("didmount");
+  }
 
-  function zoom() {
-    let refAreaLeft = initialState.refAreaLeft;
-    let refAreaRight = initialState.refAreaRight;
-    const { data } = {...initialData};
-
+  zoom() {
+    let { refAreaLeft, refAreaRight } = this.state;
+    const { data } = this.state;
 
     if (refAreaLeft === refAreaRight || refAreaRight === '') {
-      setinitialState({
+      this.setState(() => ({
         refAreaLeft: '',
         refAreaRight: '',
-        data: initialData.data,
-        left: initialData.left,
-        right: initialData.right,
-        bottom :0,
-        top:0,
-        bottom2:0,
-        top:0,
-        animation: true,
-      });
+      }));
       return;
     }
 
     // xAxis domain
     if (refAreaLeft > refAreaRight) [refAreaLeft, refAreaRight] = [refAreaRight, refAreaLeft];
-
+    console.log(refAreaLeft)
+    console.log(refAreaRight)
+    console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaa")
     // yAxis domain
-    const [bottom, top] = getAxisYDomain(refAreaLeft, refAreaRight, 'changepct', 1);
-    const [bottom2, top2] = getAxisYDomain(refAreaLeft, refAreaRight, 'news', 50);
-
-    setinitialState({
-      refAreaLeft: '',
-      refAreaRight: '',
-      data: props.chartdata.slice(),
+    const [bottom, top] = this.getAxisYDomain(refAreaLeft, refAreaRight, 'abspct', 1);
+    const [bottom2, top2] = this.getAxisYDomain(refAreaLeft, refAreaRight, 'news', 10);
+    console.log(bottom)
+    console.log(bottom2)
+    console.log("sssssssssssssssssss")
+    this.setState(() => ({
+      data: data.slice(),
       left: refAreaLeft,
       right: refAreaRight,
-      bottom :bottom,
-      top :top,
-      bottom2 :bottom2,
-      top2 :top2,
-      animation: true,
-    });
+      bottom,
+      top,
+      bottom2,
+      top2,
+      refAreaLeft: '',
+      refAreaRight: '',
+    }));
+
+    console.log(this.state.left)
+    console.log(this.state.right)
+    console.log("bbbbbbbbbbbbbbbbbbbbbbbb")
   }
 
-  function zoomOut() {
-    const { data } = {...initialData};
-    setinitialState({
-      data: props.chartdata.slice(),
+  zoomOut() {
+    const { data } = this.state;
+    this.setState(() => ({
+      data: data.slice(),
       refAreaLeft: '',
       refAreaRight: '',
       left: 'dataMin',
@@ -102,72 +116,47 @@ export default function Example (props){
       bottom: 'dataMin',
       top2: 'dataMax+50',
       bottom2: 'dataMin+50',
-      animation: true,
-    });
+    }));
   }
 
-    const data = initialState.data;
-    const left = initialState.left;
-    const right = initialState.right;
-    const refAreaLeft = initialState.refAreaLeft;
-    const refAreaRight = initialState.refAreaRight;
-    const bottom = initialState.bottom;
-    const bottom2 = initialState.bottom2;
-    const top = initialState.top;
-    const top2 = initialState.top2;
-
+  render() {
+    {console.log("렌더링렌더링렌더링렌더링렌더링렌더링렌더링렌더링렌더링렌더링렌더링렌더링렌더링")}
+    const { data, barIndex, left, right, refAreaLeft, refAreaRight, top, bottom, top2, bottom2 } = this.state;
     return (
       <div className="highlight-bar-charts" style={{ userSelect: 'none', width: '100%' }}>
-        <button type="button" className="btn update" onClick={zoomOut()}>
-          Zoom Out
-        </button>
-
         <ResponsiveContainer width="100%" height={400}>
           <LineChart
             width={800}
             height={400}
             data={data}
-            // { refAreaLeft: e.activeLabel }
-            onMouseDown={(e) => setinitialState(
-              {refAreaLeft : initialData.refAreaLeft,
-              refAreaRight: e.activeLabel,
-              data: initialData.data,
-              left: initialData.left,
-              right: initialData.right,
-              bottom,
-              top,
-              bottom2,
-              top2,
-              animation: true,}
-            )}
-            onMouseMove={(e) => initialState.refAreaLeft &&  setinitialState(
-              {refAreaLeft : initialData.refAreaLeft,
-              refAreaRight: e.activeLabel,
-              data: initialData.data,
-              left: initialData.left,
-              right: initialData.right,
-              bottom,
-              top,
-              bottom2,
-              top2,
-              animation: true,}
-            )}
+            onMouseDown={(e) => this.setState({ refAreaLeft: e.activeTooltipIndex })}
+            onMouseMove={(e) => this.state.refAreaLeft && this.setState({ refAreaRight: e.activeTooltipIndex })}
             // eslint-disable-next-line react/jsx-no-bind
-            onMouseUp={zoom()}>
-
+            onMouseUp={this.zoom.bind(this)}
+          >
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis allowDataOverflow dataKey="date" domain={[left, right]} type="number" />
-            <YAxis allowDataOverflow domain={[bottom, top]} type="number" yAxisId="1" />
-            <YAxis orientation="right" allowDataOverflow domain={[bottom2, top2]} type="number" yAxisId="2" />
+            {console.log("도메인1111111111111")}
+            {console.log(data[left])}
+            {console.log(data[right])}
+            <XAxis  dataKey="date" domain={[data[left],data[right]]} />
+
+            <YAxis allowDataOverflow domain={[bottom, top]} yAxisId="1" />
+            <YAxis orientation="right" allowDataOverflow domain={[bottom2, top2]} yAxisId="2" />
             <Tooltip />
-            <Line yAxisId="1" type="natural" dataKey="changepct" stroke="#8884d8" animationDuration={300} />
-            <Line yAxisId="2" type="natural" dataKey="news" stroke="#82ca9d" animationDuration={8000} />
+            <Line yAxisId="1" type="natural" dataKey="abspct" stroke="#8884d8" animationDuration={300} />
+            <Line yAxisId="2" type="natural" dataKey="news" stroke="#82ca9d" animationDuration={300} />
 
             {refAreaLeft && refAreaRight ? (
               <ReferenceArea yAxisId="1" x1={refAreaLeft} x2={refAreaRight} strokeOpacity={0.3} />
             ) : null}
           </LineChart>
         </ResponsiveContainer>
+
+        <button type="button" className="btn update" onClick={this.zoomOut.bind(this)}>
+          Zoom Out
+        </button>
       </div>
     );
+  }
 }
+  

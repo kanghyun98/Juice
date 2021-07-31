@@ -106,7 +106,7 @@ app.post('/stock_month',(req,res)=>{
     console.log(req.body);
     var body = qs.stringify(req.body);
     body = decodeURIComponent(body.slice(0,-1)); 
-    var temp1 =`SELECT date, changepct, news FROM (select* from `;
+    var temp1 =`SELECT date, abspct , news FROM (select* from `;
     var temp2 =`order by date desc limit 20) as a order by date asc`;
     var sql = temp1.concat('`',body,'`',temp2); 
     console.log(sql); 
@@ -130,7 +130,7 @@ app.post('/stock_year',(req,res)=>{
     console.log(req.body);
     var body = qs.stringify(req.body);
     body = decodeURIComponent(body.slice(0,-1)); 
-    var temp1 =`SELECT date,changepct,news FROM (select* from `;
+    var temp1 =`SELECT date,abspct ,news FROM (select* from `;
     var temp2 =`order by date desc limit 300) as a order by date asc`;
     var sql = temp1.concat('`',body,'`',temp2); 
     console.log(sql); 

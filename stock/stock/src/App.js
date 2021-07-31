@@ -126,7 +126,7 @@ function Navnav(props){
         props.id===""||props.id===null
         ?
         <Navbar className = "Navbar1" expand="lg">
-          <Navbar.Brand><Link to="">Juice</Link></Navbar.Brand>
+          <Navbar.Brand><Link to="">Stock Alarm</Link></Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="ml-auto">
@@ -142,7 +142,7 @@ function Navnav(props){
         </Navbar>
         :
         <Navbar className = "Navbar1" expand="lg">
-          <Navbar.Brand><Link to="">Juice</Link></Navbar.Brand>
+          <Navbar.Brand><Link to="">JUICE</Link></Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="ml-auto">
@@ -167,23 +167,9 @@ function Navnav(props){
          
         </Navbar>
       }
-    
+       
       
-      <Carousel className="sayingback" prevIcon="" nextIcon="" indicators="">
-          {
-            Saying.map(function(a,i){
-              return (
-                <Carousel.Item>
-                 {/* <Image src={Saying[i].image} roundedCircle/> */}
-                  
-                  <Carousel.Caption>
-                  </Carousel.Caption>
-                  <p style={{color:"white" ,"padding-top":"10px"}}>  {Saying[i].saying} <br/> - {Saying[i].name} - </p> 
-                </Carousel.Item>
-              )
-            })
-          }
-      </Carousel>
+     
       </div>
   );
 }
@@ -192,7 +178,8 @@ function Navnav(props){
 //메인 페이지 컴포넌트
 //메인 페이지 컴포넌트
 function Main_page(){
-  let [URL,URLset] = useState("https://public.tableau.com/views/juice_16149437075470/wordcloud?:language=en&:display_count=y&:origin=viz_share_link:showVizHome=no&:embed=true&종목명=");
+  //https://public.tableau.com/views/juice_16149437075470/wordcloud?:language=ko&:display_count=y&:origin=viz_share_link
+  let [URL,URLset] = useState("https://public.tableau.com/views/juice_16149437075470/wordcloud?:language=ko&:display_count=y&:origin=viz_share_link:showVizHome=no&:embed=true");
   return(
     <div>
         <Jumbotron className="main_background">
@@ -200,7 +187,7 @@ function Main_page(){
             <br></br><br></br>
             <p>
               학업, 직장으로 인해 주식에 집중하실 수 없으신가요?
-              <p>Juice에서 주가와 기사량 변동에 관한 데이터를 알려드립니다.</p>
+              <p>Stock Alarm에서 주가와 기사량 변동에 관한 데이터를 알려드립니다.</p>
               부담없이 신청하세요.
             </p>
             <p>
@@ -211,51 +198,10 @@ function Main_page(){
 
 
 
-          <Jumbotron style={{backgroundColor : "#FCEDDA", color : "white"}}>
+          <Jumbotron style={{backgroundColor : "black", color : "white"}}>
             <h1>워드클라우드</h1>
             <iframe src={URL} width="90%" height="950px"></iframe>
           </Jumbotron>
-      {/* <Container>
-        <h3 className="title1">대표 종목 예시 </h3>
-        <Row justify-content-center>
-          <Col>
-          <Card style={{ width: '18rem' }}>
-            <Card.Img variant="top" className="card3" src={News_Up} />
-            <Card.Body>
-              <Card.Title>삼성전자</Card.Title>
-              <Card.Text>
-
-              </Card.Text>
-              <Button variant="primary">종목 보러가기</Button>
-            </Card.Body>
-          </Card>
-          </Col>
-          <Col>
-          <Card style={{ width: '18rem' }}>
-            <Card.Img variant="top" className = "card3" src={News_Up} />
-            <Card.Body>
-              <Card.Title>아모레퍼시픽</Card.Title>
-              <Card.Text>
-                
-              </Card.Text>
-              <Button variant="primary">종목 보러가기</Button>
-            </Card.Body>
-          </Card>
-          </Col>
-          <Col>
-          <Card style={{ width: '18rem' }}>
-            <Card.Img variant="top" className="card3" src={News_Up} />
-            <Card.Body>
-              <Card.Title>박셀바이오</Card.Title>
-              <Card.Text>
-                
-              </Card.Text>
-              <Button variant="primary">종목 보러가기</Button>
-            </Card.Body>
-          </Card>
-          </Col>
-        </Row>
-      </Container>   */}
       <p></p>
       <Carousel className = "Main_Carousel">
         <Carousel.Item >

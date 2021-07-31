@@ -85,7 +85,7 @@ function Stock_page(props){
               <YAxis yAxisId="right" orientation="right" /> 
               <Tooltip /> 
               <Legend />
-              <Line yAxisId="left" type="monotone" dataKey="changepct" stroke="#FF0000" dot ={false}  activeDot={{ r: 8 }} animationDuration={2000}/>
+              <Line yAxisId="left" type="monotone" dataKey="abspct" stroke="#FF0000" dot ={false}  activeDot={{ r: 8 }} animationDuration={2000}/>
               <Line yAxisId="right" type="monotone" dataKey="news" stroke="#00D8FF" dot ={false}  activeDot={{ r: 8 }} animationDuration={2000}/>
           </LineChart>
         </ResponsiveContainer>
@@ -123,14 +123,14 @@ function Stock_page(props){
               <YAxis yAxisId="right" orientation="right" /> 
               <Tooltip /> 
               <Legend />
-              <Line yAxisId="left" type="monotone" dataKey="changepct" stroke="#FF0000" dot ={false}  activeDot={{ r: 8 }} animationDuration={1000}/>
+              <Line yAxisId="left" type="monotone" dataKey="abspct" stroke="#FF0000" dot ={false}  activeDot={{ r: 8 }} animationDuration={1000}/>
               <Line yAxisId="right" type="monotone" dataKey="news" stroke="#00D8FF" dot ={false}  activeDot={{ r: 8 }} animationDuration={1000}/>
           </LineChart>
         </ResponsiveContainer>
             :null
           }
             {/* <Chartyear search={props.search} searchbutton = {props.searchbutton}></Chartyear> */}
-          {/* {draw===true?<Chart chartdata={chartdata2} searchbutton = {props.searchbutton} search={props.search}></Chart>: null} */}
+          {draw===true?<Chart chartdata={chartdata2} searchbutton = {props.searchbutton} search={props.search}></Chart>: null}
           <br/><br/><br/><br/>
           {draw===true?<Button onClick = {()=>{}} variant="warning" style = {{color : "white"}}>관심종목에 넣기</Button>: null}
           <br/><br/><br/><br/>

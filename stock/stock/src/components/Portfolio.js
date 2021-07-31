@@ -65,7 +65,6 @@ function Portfolio(props){
             console.log("다시 체크해주세요!");
         })
     },[add],[]);
-
         return (
             <div>
               <iframe src={URL} width="1500px" height="950px"></iframe>
